@@ -1,0 +1,15 @@
+build/
+
+.vscode/
+
+Drivers/CMSIS/
+Drivers/STM32F7xx_HAL_Driver/
+
+Middlewares/Third_Party/
+
+.mxproject
+.stm32env
+Makefile
+openocd.cfg
+STM32-for-VSCode.config.yaml
+STM32Make.make
