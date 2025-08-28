@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "led.h"
+#include "dwt_delay.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,6 +119,7 @@ void StartDefaultTask(void *argument)
   for(;;)
   {
     led_toggle(&LED0);
+    dwt_delay_ms(1000);
     osDelay(50);
   }
   /* USER CODE END StartDefaultTask */
