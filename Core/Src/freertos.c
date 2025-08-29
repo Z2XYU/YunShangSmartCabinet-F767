@@ -29,6 +29,7 @@
 #include "dwt_delay.h"
 #include "sdram.h"
 #include "lcd.h"
+#include "touch.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -120,6 +121,7 @@ void StartDefaultTask(void *argument)
   dwt_init();
   sdram_init();
   lcd_init();
+  tp_dev.init();
   lcd_show_string(30, 50, 200, 16, 16, "STM32", RED);
   lcd_show_string(30, 70, 200, 16, 16, "QSPI TEST", RED);
   lcd_show_string(30, 90, 200, 16, 16, "ATOM@ALIENTEK", RED);
@@ -127,6 +129,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
+    tp_dev.scan(0);
     led_toggle(&LED0);
     osDelay(50);
   }
