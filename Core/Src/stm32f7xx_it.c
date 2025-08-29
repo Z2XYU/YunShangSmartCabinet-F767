@@ -22,6 +22,8 @@
 #include "stm32f7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,7 +104,11 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* USER CODE BEGIN MemoryManagement_IRQn 0 */
-
+  printf("Mem Access Error!!\r\n");   /* 输出错误信息 */
+  dwt_delay_ms(1000);
+  printf("Soft Reseting...\r\n");     /* 提示软件重启 */
+  dwt_delay_ms(1000);
+  NVIC_SystemReset();                 /* 软复位 */
   /* USER CODE END MemoryManagement_IRQn 0 */
   while (1)
   {
