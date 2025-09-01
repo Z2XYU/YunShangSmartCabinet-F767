@@ -1,6 +1,6 @@
 #include "lcd_ltdc.h"
 #include "lcd.h"
-#include "dwt_delay.h"
+#include "dwt.h"
 
 
 LTDC_HandleTypeDef  g_ltdc_handle;       /* LTDC句柄 */

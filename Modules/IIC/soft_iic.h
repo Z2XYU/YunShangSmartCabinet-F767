@@ -1,7 +1,7 @@
 #ifndef __MYIIC_H
 #define __MYIIC_H
 
-#include "dwt_delay.h"
+#include "dwt.h"
 #include "main.h"
 
 /******************************************************************************************/

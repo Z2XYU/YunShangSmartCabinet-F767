@@ -3,7 +3,7 @@
 #include "lcd.h"
 #include "touch.h"
 #include "24cxx.h"
-#include "dwt_delay.h"
+#include "dwt.h"
 
 _m_tp_dev tp_dev =
     {

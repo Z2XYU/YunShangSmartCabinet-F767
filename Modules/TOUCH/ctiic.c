@@ -1,5 +1,5 @@
 #include "ctiic.h"
-#include "dwt_delay.h"
+#include "dwt.h"
 
 /**
  * @brief       控制I2C速度的延时

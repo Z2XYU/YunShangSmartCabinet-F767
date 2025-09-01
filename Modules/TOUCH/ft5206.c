@@ -3,7 +3,7 @@
 #include "touch.h"
 #include "ctiic.h"
 #include "ft5206.h"
-#include "dwt_delay.h"
+#include "dwt.h"
 #include "stdio.h"
 
 uint8_t ft5206_wr_reg(uint16_t reg, uint8_t *buf, uint8_t len)

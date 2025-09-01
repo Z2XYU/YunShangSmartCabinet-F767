@@ -2,7 +2,7 @@
 #include "lcd.h"
 #include "touch.h"
 #include "gt9xxx.h"
-#include "dwt_delay.h"
+#include "dwt.h"
 #include "ctiic.h"
 
 /* 注意: 除了GT9271支持10点触摸之外, 其他触摸芯片只支持 5点触摸 */
