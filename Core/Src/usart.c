@@ -21,7 +21,8 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "wifi_comm.h"
+#include "wifi_tasks.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -255,13 +256,25 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-#define UART_DEBUG 0
+#define WIFI_RX_BUF_SIZE 256
+uint8_t wifi_rx_buf[WIFI_RX_BUF_SIZE];
+
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
   if (huart->Instance == USART2)
   {
+    WifiMessage_t msg;
+    if (Size >= WIFI_RX_BUF_SIZE)
+        Size = WIFI_RX_BUF_SIZE - 1;
 
+    wifi_rx_buf[Size] = '\0';
+    
+    wifi_recv_msg_parse(&msg,(char*)wifi_rx_buf);
 
+    wifi_recv_msg_to_queue(&msg,10);
+
+    HAL_UARTEx_ReceiveToIdle_DMA(huart,wifi_rx_buf,sizeof(wifi_rx_buf));
+    __HAL_DMA_DISABLE_IT(&hdma_usart2_rx,DMA_IT_HT);
   }
 }
 /* USER CODE END 1 */

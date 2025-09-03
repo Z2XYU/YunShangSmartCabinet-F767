@@ -13,7 +13,7 @@ static WifiHandle_t wifi;
 void wifi_init(const char *ssid, const char *password)
 {
     memset(&wifi, 0, sizeof(WifiHandle_t));
-    wifi.state.status = WIFI_STATUS_DISCONNECTED;
+    wifi.state.status = WL_IDLE_STATUS;
     strcpy(wifi.state.ip, "0.0.0.0");
     strcpy(wifi.config.ssid, ssid);
     strcpy(wifi.config.password, password);
@@ -26,10 +26,10 @@ void wifi_connect(void)
 
     strncpy(msg.type, "wifi", sizeof(msg.type) - 1);
     strncpy(msg.cmd, "wifi_connect", sizeof(msg.cmd) - 1);
-    strncpy(msg.payload.wifi_config.ssid, wifi.config.ssid, sizeof(msg.payload.wifi_config.ssid) - 1);
-    strncpy(msg.payload.wifi_config.password, wifi.config.password, sizeof(msg.payload.wifi_config.password) - 1);
+    strncpy(msg.data.wifi_config.ssid, wifi.config.ssid, sizeof(msg.data.wifi_config.ssid) - 1);
+    strncpy(msg.data.wifi_config.password, wifi.config.password, sizeof(msg.data.wifi_config.password) - 1);
 
-    wifi_send_msg_to_queue(wifiSendQueueHandle, &msg, 10);
+    wifi_send_msg_to_queue(&msg, 10);
 }
 
 void wifi_status_update(void)
@@ -37,28 +37,23 @@ void wifi_status_update(void)
     WifiCommand_t command = {0}; // 初始化为0
     strncpy(command.type, "wifi", sizeof(command.type) - 1);
     strncpy(command.cmd, "wifi_get_status", sizeof(command.cmd) - 1);
-    wifi_send_msg_to_queue(wifiSendQueueHandle, &command, 10);
+    wifi_send_msg_to_queue(&command, 10);
 }
 
 void wifi_set_status(WifiState_t *state)
 {
-    osMutexAcquire(wifiStateMutex, osWaitForever);
     wifi.state.status = state->status;
-    strcpy(wifi.state.ssid,state->ssid);
-    strcpy(wifi.state.bssid,state->bssid);
+    strcpy(wifi.state.ssid, state->ssid);
+    strcpy(wifi.state.bssid, state->bssid);
     wifi.state.signal_strength = state->signal_strength;
     strcpy(wifi.state.ip, state->ip);
     strcpy(wifi.state.gateway, state->gateway);
     strcpy(wifi.state.subnet, state->subnet);
     strcpy(wifi.state.mac, state->mac);
-    wifi.state.channel=state->channel;
-    osMutexRelease(wifiStateMutex);
+    wifi.state.channel = state->channel;
 }
 
 WifiState_t wifi_get_status(void)
 {
-    osMutexAcquire(wifiStateMutex, osWaitForever);
-    WifiState_t state = wifi.state;
-    osMutexRelease(wifiStateMutex);
-    return state;
+    return wifi.state;
 }
