@@ -9,24 +9,31 @@
 #define WIFI_UART_BUF_LEN    128
 
 // ================== WiFi 状态枚举 ==================
-typedef enum
-{
-    WIFI_STATUS_DISCONNECTED = 0,  // 未连接
-    WIFI_STATUS_CONNECTING,        // 正在连接
-    WIFI_STATUS_CONNECTED,         // 已连接
-    WIFI_STATUS_FAILED             // 连接失败
+typedef enum {
+    WL_NO_SHIELD        = 255,   // for compatibility with WiFi Shield library
+    WL_IDLE_STATUS      = 0,
+    WL_NO_SSID_AVAIL    = 1,
+    WL_SCAN_COMPLETED   = 2,
+    WL_CONNECTED        = 3,
+    WL_CONNECT_FAILED   = 4,
+    WL_CONNECTION_LOST  = 5,
+    WL_WRONG_PASSWORD   = 6,
+    WL_DISCONNECTED     = 7
 } WifiStatus_e;
 
 // ================== WiFi 状态结构体 ==================
 typedef struct
 {
-    WifiStatus_e status;                 // 当前状态
-    char ip[16];                         // IP 地址
-    int signal_strength;                 // 信号强度（RSSI）
-    uint32_t last_connect_time;          // 上次连接时间（毫秒）
-    uint8_t retry_count;                 // 重试次数
+    WifiStatus_e status;     // 当前状态
+    char ssid[32];           // WiFi 名称
+    char bssid[18];          // 路由器 MAC
+    int signal_strength;     // RSSI
+    char ip[16];             // 本地 IP
+    char gateway[16];        // 网关 IP
+    char subnet[16];         // 子网掩码
+    char mac[18];            // 本机 MAC
+    uint8_t channel;         // WiFi 信道
 } WifiState_t;
-
 // ================== WiFi 配置结构体 ==================
 typedef struct
 {
@@ -99,3 +106,10 @@ typedef struct
     MqttConfig_t config;                  // 配置信息
     void (*event_callback)(MqttMessage_t *msg); // 收到消息时的回调
 } MqttHandle_t;
+
+
+void wifi_init(const char *ssid, const char *password);
+void wifi_connect(void);
+WifiState_t wifi_get_status(void);
+void wifi_status_update(void);
+void wifi_set_status(WifiState_t *state);
