@@ -13,7 +13,7 @@ static WifiHandle_t wifi;
 void wifi_init(const char *ssid, const char *password)
 {
     memset(&wifi, 0, sizeof(WifiHandle_t));
-    wifi.state.status = WL_IDLE_STATUS;
+    wifi.state.status = WL_CONNECT_FAILED;
     strcpy(wifi.state.ip, "0.0.0.0");
     strcpy(wifi.config.ssid, ssid);
     strcpy(wifi.config.password, password);
@@ -29,7 +29,7 @@ void wifi_connect(void)
     strncpy(msg.data.wifi_config.ssid, wifi.config.ssid, sizeof(msg.data.wifi_config.ssid) - 1);
     strncpy(msg.data.wifi_config.password, wifi.config.password, sizeof(msg.data.wifi_config.password) - 1);
 
-    wifi_send_msg_to_queue(&msg, 10);
+    wifi_send_msg_to_queue(&msg, 0);
 }
 
 void wifi_status_update(void)
@@ -37,7 +37,7 @@ void wifi_status_update(void)
     WifiCommand_t command = {0}; // 初始化为0
     strncpy(command.type, "wifi", sizeof(command.type) - 1);
     strncpy(command.cmd, "wifi_get_status", sizeof(command.cmd) - 1);
-    wifi_send_msg_to_queue(&command, 10);
+    wifi_send_msg_to_queue(&command, 0);
 }
 
 void wifi_set_status(WifiState_t *state)

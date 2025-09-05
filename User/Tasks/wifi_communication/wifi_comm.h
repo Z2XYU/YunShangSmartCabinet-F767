@@ -23,16 +23,24 @@ typedef struct
     union
     {
         WifiState_t wifi_state;
+        char notice[64];
     } data;
 } WifiMessage_t;
 
 typedef void (*wifi_cmd_handler)(WifiMessage_t *msg, cJSON *data);
+typedef void (*mqtt_cmd_handler)(WifiMessage_t *msg, cJSON *data);
 
 typedef struct
 {
     const char *cmd;          // 命令字符串
     wifi_cmd_handler handler; // 处理函数
 } WifiCmdMap_t;
+
+typedef struct
+{
+    const char *cmd;          // 命令字符串
+    mqtt_cmd_handler handler; // 处理函数
+} MqttCmdMap_t;
 
 void wifi_send_message_handle(WifiCommand_t *msg);
 void wifi_recv_msg_handle(WifiMessage_t *msg);

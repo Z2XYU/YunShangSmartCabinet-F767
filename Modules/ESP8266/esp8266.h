@@ -1,6 +1,7 @@
 #pragma once
 
 #include "main.h"
+#include "mqtt_types.h"
 
 // ================== 配置宏 ==================
 #define WIFI_SSID_MAX_LEN      32   // WiFi 名称最大长度
@@ -77,27 +78,6 @@ typedef struct
     uint8_t retry_count;                 // 重试次数
 } MqttState_t;
 
-// ================== MQTT 配置结构体 ==================
-typedef struct
-{
-    char client_id[MQTT_CLIENT_ID_MAX_LEN];   // 客户端 ID
-    char username[MQTT_USERNAME_MAX_LEN];     // 用户名
-    char password[MQTT_PASSWORD_MAX_LEN];     // 密码
-    char server[MQTT_SERVER_ADDR_MAX_LEN];    // 服务器地址
-    uint16_t port;                            // 服务器端口
-    char sub_topic[MQTT_TOPIC_MAX_LEN];       // 订阅主题
-    char pub_topic[MQTT_TOPIC_MAX_LEN];       // 发布主题
-} MqttConfig_t;
-
-// ================== MQTT 消息结构体 ==================
-typedef struct
-{
-    char topic[MQTT_TOPIC_MAX_LEN];       // 消息主题
-    char payload[MQTT_PAYLOAD_MAX_LEN];   // 消息内容
-    uint16_t length;                      // 消息长度
-    uint8_t qos;                          // QoS 等级
-    uint8_t retain;                       // 是否保留
-} MqttMessage_t;
 
 // ================== MQTT 控制句柄 ==================
 typedef struct

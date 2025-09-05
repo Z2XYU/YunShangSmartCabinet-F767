@@ -23,6 +23,7 @@
 /* USER CODE BEGIN 0 */
 #include "wifi_comm.h"
 #include "wifi_tasks.h"
+#include "stdio.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -268,10 +269,12 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
         Size = WIFI_RX_BUF_SIZE - 1;
 
     wifi_rx_buf[Size] = '\0';
+
     
+    printf("rx:%s\n",wifi_rx_buf);
     wifi_recv_msg_parse(&msg,(char*)wifi_rx_buf);
 
-    wifi_recv_msg_to_queue(&msg,10);
+    wifi_recv_msg_to_queue(&msg,0);
 
     HAL_UARTEx_ReceiveToIdle_DMA(huart,wifi_rx_buf,sizeof(wifi_rx_buf));
     __HAL_DMA_DISABLE_IT(&hdma_usart2_rx,DMA_IT_HT);
