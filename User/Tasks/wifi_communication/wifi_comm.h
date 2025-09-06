@@ -4,6 +4,7 @@
 #include "cmsis_os2.h"
 #include "ESP8266/esp8266.h"
 #include <cJSON.h>
+#include "motor_control_task.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
     {
         WifiState_t wifi_state;
         char notice[64];
+        MotorControl_t control_cmd;
     } data;
 } WifiMessage_t;
 

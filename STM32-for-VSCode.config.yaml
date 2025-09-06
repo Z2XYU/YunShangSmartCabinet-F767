@@ -8,7 +8,7 @@
 # The project name
 target: YunShangSmartCabinet-F767
 # Can be C or C++
-language: C
+language: C++
 
 optimization: Og
 

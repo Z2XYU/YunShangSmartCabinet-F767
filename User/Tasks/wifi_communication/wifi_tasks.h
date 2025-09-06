@@ -9,6 +9,6 @@ extern osMessageQueueId_t wifiRecvQueueHandle;
 extern osThreadId_t wifiRecvTaskHandle;
 extern osThreadId_t wifiSendTaskHandle;
 
-void wifi_communication_task_init(void);
+void wifi_communication_tasks_init(void);
 void wifiRecvTask(void *argument);
 void wifiSendTask(void *argument);

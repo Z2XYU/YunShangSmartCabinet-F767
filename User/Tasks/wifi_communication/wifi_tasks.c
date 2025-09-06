@@ -40,7 +40,7 @@ const osThreadAttr_t wifiSendTask_attributes = {
 
 
 /* WiFi 通信任务初始化 --------------------------------------------------- */
-void wifi_communication_task_init(void)
+void wifi_communication_tasks_init(void)
 {
     wifiStateMutex = osMutexNew(NULL); 
 
