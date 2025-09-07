@@ -1,6 +1,9 @@
 #include "stepper_motor.h"
 #include "a4988.h"
 #include <math.h>
+#include "cmsis_os2.h"
+#include "motor_control_tasks.h"
+#include "door_contact.h"
 
 void stepper_motor_init(StepperMotor_t *motor,
                         GPIO_TypeDef *dir_port, uint16_t dir_pin,
@@ -98,6 +101,7 @@ void stepper_motor_on_timer_interrupt(StepperMotor_t *motor)
     {
         motor->busy = 0;
         HAL_TIM_Base_Stop_IT(motor->htim);
+        osThreadFlagsSet(motorCalibrationTaskHandle,0x01);
         return;
     }
 
@@ -123,4 +127,27 @@ void stepper_motor_on_timer_interrupt(StepperMotor_t *motor)
         motor->step_interval_us = 200;
 
     __HAL_TIM_SET_AUTORELOAD(motor->htim, (uint32_t)motor->step_interval_us);
+}
+
+void door_open(StepperMotor_t *motor)
+{
+    stepper_motor_move_steps(motor,8000,2000,2000,2000);
+}
+
+void door_close(StepperMotor_t *motor)
+{
+    stepper_motor_move_steps(motor,-8000,2000,2000,2000);
+}
+
+void door_calibration(DoorController_t *door)
+{
+    for(int i=0;i<1000;i++)
+    {
+        if(read_door_sta(door->sensor->sensor_port,door->sensor->sensor_pin)==GPIO_PIN_SET)
+        {
+            break;
+        }
+        a4988_step(door->motor->step_port,door->motor->step_pin);
+        osDelay(1); 
+    }
 }

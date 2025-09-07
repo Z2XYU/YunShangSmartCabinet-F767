@@ -5,12 +5,14 @@
 #include "cJSON.h"
 #include "stdio.h"
 #include "mqtt_message.h"
+#include "motor_control_tasks.h"
 
 static char uart_buf[512];
 
 // 前向声明
 static void status_handle(WifiMessage_t *msg, cJSON *data);
 static void notice_hanle(WifiMessage_t *msg, cJSON *data);
+static void door_control_handle(WifiMessage_t *msg, cJSON *data);
 
 #define WIFI_CMD_TABLE_SIZE 2
 WifiCmdMap_t wifi_cmd_table[] = {
@@ -19,11 +21,11 @@ WifiCmdMap_t wifi_cmd_table[] = {
     // 以后新增命令直接在这里加
 };
 
-#define MQTT_CMD_TABLE_SIZE 1
+#define MQTT_CMD_TABLE_SIZE 2
 MqttCmdMap_t mqtt_cmd_table[] = {
-    {"notice", notice_hanle}
+    {"notice", notice_hanle},
+    {"door_control", door_control_handle},
 };
-
 
 // 向消息队列发送消息
 osStatus_t wifi_send_msg_to_queue(const WifiCommand_t *cmd, uint32_t timeout_ms)
@@ -60,7 +62,7 @@ static void msg_send(const char *json_str)
     uart_buf[len + 1] = '\0';
 
     HAL_UART_Transmit_DMA(&huart2, (uint8_t *)uart_buf, (uint16_t)(len + 1));
-    //printf("uart2:%s\n", uart_buf);
+    // printf("uart2:%s\n", uart_buf);
 }
 
 void wifi_send_message_handle(WifiCommand_t *msg)
@@ -102,11 +104,11 @@ void wifi_send_message_handle(WifiCommand_t *msg)
 
             cJSON_AddItemToObject(root, "data", data);
         }
-        else if(strcmp(msg->cmd,"subscribe")==0)
+        else if (strcmp(msg->cmd, "subscribe") == 0)
         {
             cJSON *data = cJSON_CreateObject();
-            cJSON_AddStringToObject(data,"topic",msg->data.mqtt_config.topic);
-            cJSON_AddStringToObject(data,"qos",msg->data.mqtt_config.qos);
+            cJSON_AddStringToObject(data, "topic", msg->data.mqtt_config.topic);
+            cJSON_AddStringToObject(data, "qos", msg->data.mqtt_config.qos);
 
             cJSON_AddItemToObject(root, "data", data);
         }
@@ -160,6 +162,10 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
             {
                 mqtt_subscribe_tpoic("control", 0);
             }
+        }
+        else if(strcmp(msg->cmd,"door_control")==0)
+        {
+            osMessageQueuePut(motorControlMsgQueueHandle,msg,0,0);
         }
     }
 }
@@ -310,4 +316,38 @@ static void status_handle(WifiMessage_t *msg, cJSON *data)
     item = cJSON_GetObjectItem(data, "channel");
     if (cJSON_IsNumber(item))
         msg->data.wifi_state.channel = (uint8_t)item->valueint;
+}
+
+static void door_control_handle(WifiMessage_t *msg, cJSON *data)
+{
+    if (!msg || !data)
+        return;
+
+    cJSON *item = NULL;
+
+    item = cJSON_GetObjectItem(data, "clothes_id");
+    if (cJSON_IsNumber(item))
+    {
+        msg->data.control_cmd.clothes_id = item->valueint;
+    }
+
+    item = cJSON_GetObjectItem(data, "action");
+    if (cJSON_IsString(item))
+    {
+        strncpy(msg->data.control_cmd.action, item->valuestring, sizeof(msg->data.control_cmd.action) - 1);
+        msg->data.control_cmd.action[sizeof(msg->data.control_cmd.action) - 1] = '\0';
+    }
+
+    item = cJSON_GetObjectItem(data, "option");
+    if (cJSON_IsString(item))
+    {
+        strncpy(msg->data.control_cmd.option, item->valuestring, sizeof(msg->data.control_cmd.action) - 1);
+        msg->data.control_cmd.action[sizeof(msg->data.control_cmd.action) - 1] = '\0';
+    }
+
+    item = cJSON_GetObjectItem(data, "cabinet_location");
+    if (cJSON_IsNumber(item))
+    {
+        msg->data.control_cmd.cabinet_location = item->valueint;
+    }
 }

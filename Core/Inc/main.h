@@ -57,10 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ReedSwitch2_Pin GPIO_PIN_11
+#define ReedSwitch2_GPIO_Port GPIOI
 #define LED1_Pin GPIO_PIN_0
 #define LED1_GPIO_Port GPIOB
 #define LED0_Pin GPIO_PIN_1
 #define LED0_GPIO_Port GPIOB
+#define ReedSwitch1_Pin GPIO_PIN_2
+#define ReedSwitch1_GPIO_Port GPIOB
 #define MOTOR1_DIR_Pin GPIO_PIN_6
 #define MOTOR1_DIR_GPIO_Port GPIOH
 #define MOTOR2_STEP_Pin GPIO_PIN_11

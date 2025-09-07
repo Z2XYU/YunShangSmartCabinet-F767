@@ -29,7 +29,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "motor_control_task.h"
+#include "motor_control_tasks.h"
 #include "stepper_motor.h"
 /* USER CODE END Includes */
 
@@ -207,6 +207,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if(htim->Instance == TIM6)
   {
     stepper_motor_on_timer_interrupt(&motors[0]);
+  }
+  else if(htim->Instance == TIM7)
+  {
+    stepper_motor_on_timer_interrupt(&motors[1]);
   }
   /* USER CODE END Callback 1 */
 }
