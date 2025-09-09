@@ -20,8 +20,13 @@ typedef struct
   
 	lv_obj_t *screen;
 	bool screen_del;
-	lv_obj_t *screen_btn_1;
-	lv_obj_t *screen_btn_1_label;
+	lv_obj_t *screen_spinner_1;
+	lv_obj_t *screen_label_1;
+	lv_obj_t *screen_bar_1;
+	lv_obj_t *screen_label_2;
+	lv_obj_t *screen_img_1;
+	lv_obj_t *screen_img_2;
+	lv_obj_t *screen_img_3;
 }lv_ui;
 
 typedef void (*ui_setup_scr_t)(lv_ui * ui);
@@ -46,9 +51,13 @@ extern lv_ui guider_ui;
 
 
 void setup_scr_screen(lv_ui *ui);
+LV_IMG_DECLARE(_YunShang_IOT_alpha_140x100);
+LV_IMG_DECLARE(_image1_alpha_246x315);
+LV_IMG_DECLARE(_YunShang_City_alpha_311x358);
 
-LV_FONT_DECLARE(lv_font_montserratMedium_16)
-LV_FONT_DECLARE(lv_font_montserratMedium_12)
+LV_FONT_DECLARE(lv_font_simsun_20)
+//LV_FONT_DECLARE(lv_font_montserratMedium_16)
+LV_FONT_DECLARE(lv_font_AlexBrush_Regular_40)
 
 
 #ifdef __cplusplus

@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include "lvgl.h"
 #include "custom.h"
+#include "gui_guider.h"
 
 /*********************
  *      DEFINES
@@ -26,7 +27,10 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-
+static void hide_spinner_cb(lv_timer_t *t)
+{
+    
+}
 /**********************
  *  STATIC VARIABLES
  **********************/
@@ -38,5 +42,6 @@
 void custom_init(lv_ui *ui)
 {
     /* Add your codes here */
+    lv_timer_create(hide_spinner_cb,3000,NULL);
 }
 

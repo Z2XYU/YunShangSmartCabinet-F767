@@ -5,8 +5,8 @@
 #include "lvgl.h"
 #include "../Middlewares/LVGL/GUI/porting/lv_port_disp.h"
 #include "../Middlewares/LVGL/GUI/porting/lv_port_indev.h"
-#include "../GUI/generated/gui_guider.h"
-#include "../GUI/generated/events_init.h"
+#include "gui_guider.h"
+#include "events_init.h"
 
 osThreadId_t lvglRefreshTaskHandle; 
 const osThreadAttr_t lvglRefreshTask_attributes = {
@@ -23,8 +23,8 @@ void ui_refresh_tasks_init(void)
     lv_port_disp_init();
     lv_port_indev_init();
 
-    setup_ui(&guider_ui);
-    events_init(&guider_ui);
+     setup_ui(&guider_ui);
+     events_init(&guider_ui);
 
     lvglRefreshTaskHandle =osThreadNew(lvglRefreshTask,NULL,&lvglRefreshTask_attributes);
 }
