@@ -7,6 +7,6 @@
 void tasks_init(void)
 {
     ui_refresh_tasks_init();
-    wifi_communication_tasks_init();
-    motor_control_tasks_init();
+    //wifi_communication_tasks_init();
+    //motor_control_tasks_init();
 }

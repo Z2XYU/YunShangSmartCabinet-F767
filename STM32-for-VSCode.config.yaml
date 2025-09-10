@@ -12,6 +12,7 @@ language: C
 
 optimization: Og
 
+
 # MCU settings
 targetMCU: stm32f7x
 cpu: cortex-m7 # type of cpu e.g. cortex-m4
@@ -84,7 +85,7 @@ includeDirectories:
   - User/**
   - Middlewares/MQTT/**
   - Middlewares/cJSON/**
-  - Middlewares/LVGL/**
+  - Middlewares/LVGL/GUI/**
 
 
 # Files that should be included in the compilation.
@@ -97,10 +98,34 @@ sourceFiles:
   - Core/Src/**
   - Core/Lib/**
   - Modules/**
-  - User/**
+  - User/Tasks/**
+  - User/GUI/**
   - Middlewares/MQTT/**
   - Middlewares/cJSON/**
-  - Middlewares/LVGL/**
+
+  - Middlewares/LVGL/GUI/porting/**
+  - Middlewares/LVGL/GUI/lvgl/src/core/**   
+  - Middlewares/LVGL/GUI/lvgl/src/draw/**   
+  - Middlewares/LVGL/GUI/lvgl/src/hal/**   
+  - Middlewares/LVGL/GUI/lvgl/src/misc/**
+
+  - Middlewares/LVGL/GUI/lvgl/src/extra/**
+  - Middlewares/LVGL/GUI/lvgl/src/widgets/**
+
+  # - Middlewares/LVGL/GUI/lvgl/src/extra/lv_extra.c
+  # - Middlewares/lvgl/GUI/lvgl/src/extra/libs/fsdrv/**
+  # - Middlewares/lvgl/GUI/lvgl/src/extra/libs/png/**
+  # - Middlewares/lvgl/GUI/lvgl/src/extra/themes/**
+
+  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font.c
+  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_fmt_txt.c
+  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_14.c
+
+  # - Middlewares/LVGL/GUI/lvgl/src/widgets/lv_bar.c
+  # - Middlewares/LVGL/GUI/lvgl/src/widgets/lv_img.c
+  # - Middlewares/LVGL/GUI/lvgl/src/widgets/lv_label.c
+  # - Middlewares/LVGL/GUI/lvgl/src/extra/widgets/spinner/lv_spinner.c
+  
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.
@@ -115,7 +140,7 @@ customMakefileRules:
 #   dependsOn: $(BUILD_DIR)/$(TARGET).elf # can be left out    
 
 # Additional flags which will be used when invoking the make command
-makeFlags:
+makeFlags: ["-j8"]
 # - -O  # use this option when the output of make is mixed up only works for make version 4.0 and upwards
 # - --silent # use this option to silence the output of the build
     

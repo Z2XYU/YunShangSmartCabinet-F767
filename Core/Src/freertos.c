@@ -32,6 +32,7 @@
 #include "fatfs.h"
 #include "sdmmc.h"
 #include "stdio.h"
+#include "dwt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,7 +67,7 @@ const osThreadAttr_t defaultTask_attributes = {
 // SD卡的FatFS文件系统挂载、格式化、读写测试
 void FatFsTest(void)
 {
-    static FATFS myFatFs;                                                 // FatFs 文件系统对象; 这个结构体占用598字节，有点大，需用static修饰(存放在全局数据区), 避免stack溢出
+    //static FATFS SDFatFS;                                                 // FatFs 文件系统对象; 这个结构体占用598字节，有点大，需用static修饰(存放在全局数据区), 避免stack溢出
     static FIL myFile;                                                    // 文件对象; 这个结构体占用570字节，有点大，需用static修饰(存放在全局数据区), 避免stack溢出
     static FRESULT f_res;                                                 // 文件操作结果
     static uint32_t num;                                                  // 文件实际成功读写的字节数
@@ -74,12 +75,12 @@ void FatFsTest(void)
     static uint8_t aWriteBuf[] =  "测试; This is FatFs Test ! \r\n";      // 要写入的数据
  
     // 重要的延时：避免烧录期间的复位导致文件读写、格式化等错误
-    HAL_Delay(1000);                                                      // 重要：稍作延时再开始读写测试; 避免有些仿真器烧录期间的多次复位，短暂运行了程序，导致下列读写数据不完整。
+    dwt_delay_ms(1000);                                                      // 重要：稍作延时再开始读写测试; 避免有些仿真器烧录期间的多次复位，短暂运行了程序，导致下列读写数据不完整。
  
     // 1、挂载测试：在SD卡挂载文件系统
     printf("\r\n\r\n");
     printf("1、挂载 FatFs 测试 ****** \r\n");
-    f_res = f_mount(&myFatFs, "0:", 1);                                   // 在SD卡上挂载文件系统; 参数：文件系统对象、驱动器路径、读写模式(0只读、1读写)
+    f_res = f_mount(&SDFatFS, "0:", 1);                                   // 在SD卡上挂载文件系统; 参数：文件系统对象、驱动器路径、读写模式(0只读、1读写)
     if (f_res == FR_NO_FILESYSTEM)                                        // 检查是否已有文件系统，如果没有，就格式化创建创建文件系统
     {
         printf("SD卡没有文件系统，开始格式化…...\r\n");
@@ -89,7 +90,7 @@ void FatFsTest(void)
         {
             printf("SD卡格式化：成功 \r\n");
             f_res = f_mount(NULL, "0:", 1);                               // 格式化后，先取消挂载
-            f_res = f_mount(&myFatFs, "0:", 1);                           // 重新挂载
+            f_res = f_mount(&SDFatFS, "0:", 1);                           // 重新挂载
             if (f_res == FR_OK)
                 printf("FatFs 挂载成功 \r\n");                            // 挂载成功
             else
@@ -108,9 +109,9 @@ void FatFsTest(void)
     }
     else                                                                  // 挂载成功
     {
-        if (myFatFs.fs_type == 0x03)                                      // FAT32; 1-FAT12、2-FAT16、3-FAT32、4-exFat
+        if (SDFatFS.fs_type == 0x03)                                      // FAT32; 1-FAT12、2-FAT16、3-FAT32、4-exFat
             printf("SD卡已有文件系统：FAT32\n");
-        if (myFatFs.fs_type == 0x04)                                      // exFAT; 1-FAT12、2-FAT16、3-FAT32、4-exFat
+        if (SDFatFS.fs_type == 0x04)                                      // exFAT; 1-FAT12、2-FAT16、3-FAT32、4-exFat
             printf("SD卡已有文件系统：exFAT\n");                         
         printf("FatFs 挂载成功 \r\n");                                    // 挂载成功
     }
@@ -168,9 +169,8 @@ void FatFsTest(void)
     }
  
     f_close(&myFile);                                                     // 不再读写，关闭文件
-    f_mount(NULL, "0:", 1);                                               // 不再使用文件系统，取消挂载文件系统
+    //f_mount(NULL, "0:", 1);                                               // 不再使用文件系统，取消挂载文件系统
 }
-
 // 获取SD卡信息
 // 注意: 本函数需要在f_mount()执行后再调用，因为CubeMX生成的FatFs代码, 会在f_mount()函数内对SD卡进行初始化
 void SDCardInfo(void)
@@ -186,7 +186,7 @@ void SDCardInfo(void)
         printf("卡版本：%d \r\n", pCardInfo.CardVersion);      // 版本返回：0-CARD_V1、1-CARD_V2
         printf("块数量：%d \r\n", pCardInfo.BlockNbr);         // 可用的块数量
         printf("块大小：%d \r\n", pCardInfo.BlockSize);        // 每个块的大小; 单位：字节
-        printf("卡容量：%luG \r\n", ((uint64_t)pCardInfo.BlockSize * pCardInfo.BlockNbr) / 1024 / 1024 / 1024);  // 计算卡的容量; 单位：GB
+        printf("卡容量：%lluG \r\n", ((uint64_t)pCardInfo.BlockSize * pCardInfo.BlockNbr) / 1024 / 1024 / 1024);  // 计算卡的容量; 单位：GB
     }
 }
 /* USER CODE END FunctionPrototypes */
@@ -215,7 +215,8 @@ void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName)
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
   modeules_init();
-  //tasks_init();
+  tasks_init();
+  //FatFsTest();
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -258,8 +259,8 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  FatFsTest();
-  SDCardInfo();
+    //FatFsTest();
+    //SDCardInfo();
   /* Infinite loop */
   for(;;)
   {
