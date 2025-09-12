@@ -62,7 +62,7 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(MOTOR1_DIR_GPIO_Port, MOTOR1_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MOTOR2_STEP_GPIO_Port, MOTOR2_STEP_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, MOTOR2_STEP_Pin|plasmas1_Pin|plasmas2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(MOTOR1_STEP_GPIO_Port, MOTOR1_STEP_Pin, GPIO_PIN_RESET);
@@ -86,12 +86,6 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : ReedSwitch1_Pin */
-  GPIO_InitStruct.Pin = ReedSwitch1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ReedSwitch1_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pin : MOTOR1_DIR_Pin */
   GPIO_InitStruct.Pin = MOTOR1_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -99,12 +93,12 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(MOTOR1_DIR_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MOTOR2_STEP_Pin */
-  GPIO_InitStruct.Pin = MOTOR2_STEP_Pin;
+  /*Configure GPIO pins : MOTOR2_STEP_Pin plasmas2_Pin */
+  GPIO_InitStruct.Pin = MOTOR2_STEP_Pin|plasmas2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(MOTOR2_STEP_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MOTOR1_STEP_Pin */
   GPIO_InitStruct.Pin = MOTOR1_STEP_Pin;
@@ -113,12 +107,25 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(MOTOR1_STEP_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : ReedSwitch1_Pin */
+  GPIO_InitStruct.Pin = ReedSwitch1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ReedSwitch1_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : MOTOR2_DIR_Pin */
   GPIO_InitStruct.Pin = MOTOR2_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(MOTOR2_DIR_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : plasmas1_Pin */
+  GPIO_InitStruct.Pin = plasmas1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(plasmas1_GPIO_Port, &GPIO_InitStruct);
 
 }
 

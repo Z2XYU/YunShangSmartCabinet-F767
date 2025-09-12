@@ -63,16 +63,20 @@ void Error_Handler(void);
 #define LED1_GPIO_Port GPIOB
 #define LED0_Pin GPIO_PIN_1
 #define LED0_GPIO_Port GPIOB
-#define ReedSwitch1_Pin GPIO_PIN_2
-#define ReedSwitch1_GPIO_Port GPIOB
 #define MOTOR1_DIR_Pin GPIO_PIN_6
 #define MOTOR1_DIR_GPIO_Port GPIOH
 #define MOTOR2_STEP_Pin GPIO_PIN_11
 #define MOTOR2_STEP_GPIO_Port GPIOD
 #define MOTOR1_STEP_Pin GPIO_PIN_3
 #define MOTOR1_STEP_GPIO_Port GPIOG
+#define ReedSwitch1_Pin GPIO_PIN_8
+#define ReedSwitch1_GPIO_Port GPIOA
 #define MOTOR2_DIR_Pin GPIO_PIN_3
 #define MOTOR2_DIR_GPIO_Port GPIOI
+#define plasmas1_Pin GPIO_PIN_3
+#define plasmas1_GPIO_Port GPIOD
+#define plasmas2_Pin GPIO_PIN_4
+#define plasmas2_GPIO_Port GPIOD
 #define LCD_BL_Pin GPIO_PIN_5
 #define LCD_BL_GPIO_Port GPIOB
 

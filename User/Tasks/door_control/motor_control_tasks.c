@@ -3,6 +3,7 @@
 #include <string.h>
 #include "tim.h"
 #include "stepper_motor.h"
+#include "plasma.h"
 
 osMessageQueueId_t motorControlMsgQueueHandle;
 const osMessageQueueAttr_t motorControlMsgQueue_attributes = {
@@ -25,17 +26,15 @@ const osThreadAttr_t motorControlTask_attributes = {
 
 // 定义两个电机
 StepperMotor_t motors[MOTOR_NUM];
-MagneticSensor_t sensors[MOTOR_NUM];
+MagneticSensor_t sensors[MOTOR_NUM] =
+    {
+        {ReedSwitch1_GPIO_Port, ReedSwitch1_Pin},
+        {ReedSwitch2_GPIO_Port, ReedSwitch2_Pin}};
 DoorController_t doors[MOTOR_NUM];
 
-static void sensor_init(void)
-{
-    sensors[0].sensor_port = ReedSwitch1_GPIO_Port;
-    sensors[0].sensor_pin = ReedSwitch1_Pin;
-
-    sensors[1].sensor_port = ReedSwitch2_GPIO_Port;
-    sensors[1].sensor_pin = ReedSwitch2_Pin;
-}
+Plasma_t plasmas[2] = {
+    {plasmas1_GPIO_Port, plasmas1_Pin},
+    {plasmas2_GPIO_Port, plasmas2_Pin}};
 
 static void motors_init(void)
 {
@@ -61,6 +60,12 @@ static void doors_init(void)
     }
 }
 
+void purification_timer_callback(void *argument)
+{
+    plasma_off(&plasmas[0]);
+    plasma_off(&plasmas[1]);
+}
+
 void motor_control_tasks_init(void)
 {
 
@@ -70,7 +75,7 @@ void motor_control_tasks_init(void)
 
     motorControlMsgQueueHandle = osMessageQueueNew(10, sizeof(WifiMessage_t), &motorControlMsgQueue_attributes);
 
-    //motorCalibrationTaskHandle = osThreadNew(motorCalibrationTask, NULL, &motorCalibrationTask_attributes);
+    // motorCalibrationTaskHandle = osThreadNew(motorCalibrationTask, NULL, &motorCalibrationTask_attributes);
     motorControlTaskHandle = osThreadNew(motorCommTask, NULL, &motorControlTask_attributes);
 }
 
@@ -111,15 +116,21 @@ void motorCommTask(void *argument)
         {
             if (strcmp(msg.type, "mqtt") == 0 && strcmp(msg.cmd, "door_control") == 0)
             {
-                if (strcmp(msg.data.control_cmd.option, "open") == 0)
+                if (strcmp(msg.data.control_cmd.action, "rent") == 0)
                 {
-                    doors[msg.data.control_cmd.cabinet_location].state = DOOR_OPENING;
-                    door_open(&motors[msg.data.control_cmd.cabinet_location-1]);
+                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
+                    {
+                        doors[msg.data.control_cmd.cabinet_location].state = DOOR_OPENING;
+                        door_open(&motors[msg.data.control_cmd.cabinet_location - 1]);
+                    }
+                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
+                    {
+                        doors[msg.data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
+                        door_close(&motors[msg.data.control_cmd.cabinet_location - 1]);
+                    }
                 }
-                else if (strcmp(msg.data.control_cmd.option, "close") == 0)
+                else if (strcmp(msg.data.control_cmd.action, "return") == 0)
                 {
-                    doors[msg.data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
-                    door_close(&motors[msg.data.control_cmd.cabinet_location-1]);
                 }
             }
         }
