@@ -14,7 +14,6 @@ typedef struct
     int cabinet_location;
 } MotorControl_t;
 
-
 extern StepperMotor_t motors[MOTOR_NUM];
 extern DoorController_t doors[MOTOR_NUM];
 extern osThreadId_t motorCalibrationTaskHandle;

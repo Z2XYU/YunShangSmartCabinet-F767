@@ -4,6 +4,7 @@
 #include "tim.h"
 #include "stepper_motor.h"
 #include "plasma.h"
+#include "Clock/clock.h"
 
 osMessageQueueId_t motorControlMsgQueueHandle;
 const osMessageQueueAttr_t motorControlMsgQueue_attributes = {
@@ -31,10 +32,6 @@ MagneticSensor_t sensors[MOTOR_NUM] =
         {ReedSwitch1_GPIO_Port, ReedSwitch1_Pin},
         {ReedSwitch2_GPIO_Port, ReedSwitch2_Pin}};
 DoorController_t doors[MOTOR_NUM];
-
-Plasma_t plasmas[2] = {
-    {plasmas1_GPIO_Port, plasmas1_Pin},
-    {plasmas2_GPIO_Port, plasmas2_Pin}};
 
 static void motors_init(void)
 {
@@ -107,6 +104,22 @@ void motorCalibrationTask(void *argument)
     }
 }
 
+static void open_cmd(WifiMessage_t *msg)
+{
+    doors[msg->data.control_cmd.cabinet_location].state = DOOR_OPENING;
+    door_open(&motors[msg->data.control_cmd.cabinet_location - 1]);
+}
+
+static void close_cmd(WifiMessage_t *msg)
+{
+    doors[msg->data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
+    door_close(&motors[msg->data.control_cmd.cabinet_location - 1]);
+
+    /*开启等离子净化*/
+    plasma_on_all();
+    rtc_set_alarm_30min();
+}
+
 void motorCommTask(void *argument)
 {
     while (1)
@@ -120,17 +133,24 @@ void motorCommTask(void *argument)
                 {
                     if (strcmp(msg.data.control_cmd.option, "open") == 0)
                     {
-                        doors[msg.data.control_cmd.cabinet_location].state = DOOR_OPENING;
-                        door_open(&motors[msg.data.control_cmd.cabinet_location - 1]);
+                        open_cmd(&msg);
                     }
                     else if (strcmp(msg.data.control_cmd.option, "close") == 0)
                     {
-                        doors[msg.data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
-                        door_close(&motors[msg.data.control_cmd.cabinet_location - 1]);
+                        close_cmd(&msg);
                     }
                 }
                 else if (strcmp(msg.data.control_cmd.action, "return") == 0)
                 {
+                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
+                    {
+                        open_cmd(&msg);
+                    }
+                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
+                    {
+                        /* 后续添加 RFID 溯源机制*/
+                        close_cmd(&msg);
+                    }
                 }
             }
         }

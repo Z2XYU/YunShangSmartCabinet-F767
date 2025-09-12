@@ -10,8 +10,8 @@ _m_tp_dev tp_dev =
         tp_init,
         tp_scan,
         tp_adjust,
-        0,
-        0,
+        {0},
+        {0},
         0,
         0,
         0,
@@ -275,7 +275,7 @@ uint8_t tp_scan(uint8_t mode)
         }
     }
 
-    return tp_dev.sta & TP_PRES_DOWN; /* 返回当前的触屏状态 */
+    return (uint8_t)(tp_dev.sta & TP_PRES_DOWN); /* 返回当前的触屏状态 */
 }
 
 /* TP_SAVE_ADDR_BASE定义触摸屏校准参数保存在EEPROM里面的位置(起始地址)

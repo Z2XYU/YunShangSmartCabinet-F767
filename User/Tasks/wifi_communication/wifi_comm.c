@@ -18,7 +18,6 @@ static void door_control_handle(WifiMessage_t *msg, cJSON *data);
 WifiCmdMap_t wifi_cmd_table[] = {
     {"status", status_handle},
     {"notice", notice_hanle},
-    // 以后新增命令直接在这里加
 };
 
 #define MQTT_CMD_TABLE_SIZE 2
@@ -31,10 +30,10 @@ MqttCmdMap_t mqtt_cmd_table[] = {
 osStatus_t wifi_send_msg_to_queue(const WifiCommand_t *cmd, uint32_t timeout_ms)
 {
     return osMessageQueuePut(
-        wifiSendQueueHandle, // 使用传入的队列
+        wifiSendQueueHandle, 
         cmd,
-        0,         // 优先级
-        timeout_ms // 超时
+        0,         
+        timeout_ms 
     );
 }
 
