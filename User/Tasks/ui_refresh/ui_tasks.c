@@ -10,11 +10,13 @@
 #include "gui_guider.h"
 #include "events_init.h"
 #include "stdio.h"
+#include "lvgl_image.h"
+#include "sdram.h"
 
 osThreadId_t lvglRefreshTaskHandle;
 const osThreadAttr_t lvglRefreshTask_attributes = {
     .name = "lvglRefreshTas",
-    .stack_size = 128 * 16,
+    .stack_size = 1024 * 4,
     .priority = (osPriority_t)osPriorityNormal,
 };
 
@@ -26,27 +28,18 @@ void ui_refresh_tasks_init(void)
     lvglRefreshTaskHandle = osThreadNew(lvglRefreshTask, NULL, &lvglRefreshTask_attributes);
 }
 
+
 void lvglRefreshTask(void *argument)
 {
     lv_init();
     lv_port_disp_init();
     lv_port_indev_init();
+    
+    //osDelay(1000);
+    load_all_image();
 
-    // setup_ui(&guider_ui);
-    // events_init(&guider_ui);
-
-    /* 创建屏幕 */
-    lv_obj_t * scr = lv_scr_act();
-
-    /* 创建图片对象 */
-    lv_obj_t * img1 = lv_img_create(scr);
-
-    /* 从 SD 卡直接读取 bin 文件 */
-    lv_img_set_src(img1, "0:/a.bin");
-    //lv_obj_set_size(img1, 800, 480);
-
-    /* 居中显示 */
-    lv_obj_align(img1, LV_ALIGN_CENTER, 0, 0);
+    setup_ui(&guider_ui);
+    events_init(&guider_ui);
     
     while (1)
     {

@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "lvgl.h"
+#include "lvgl_image.h"
 
 typedef struct
 {
@@ -24,7 +25,10 @@ typedef struct
 	lv_obj_t *screen_label_1;
 	lv_obj_t *screen_label_2;
 	lv_obj_t *screen_bar_1;
-	lv_obj_t *screen_img_1;
+	lv_obj_t *screen_YunShang_City;
+	lv_obj_t *screen_YunShang_IOT_log;
+	lv_obj_t *screen_image1;
+	lv_obj_t *screen_image2;
 }lv_ui;
 
 typedef void (*ui_setup_scr_t)(lv_ui * ui);
@@ -51,7 +55,7 @@ extern lv_ui guider_ui;
 void setup_scr_screen(lv_ui *ui);
 
 LV_FONT_DECLARE(lv_font_AlexBrush_Regular_40)
-//LV_FONT_DECLARE(lv_font_montserratMedium_16)
+LV_FONT_DECLARE(lv_font_montserratMedium_16)
 LV_FONT_DECLARE(lv_font_simsun_20)
 
 
