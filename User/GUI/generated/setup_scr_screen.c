@@ -105,7 +105,7 @@ void setup_scr_screen(lv_ui *ui)
     lv_obj_set_style_anim_time(ui->screen_bar_1, 3000, 0);
     lv_bar_set_mode(ui->screen_bar_1, LV_BAR_MODE_NORMAL);
     lv_bar_set_range(ui->screen_bar_1, 0, 100);
-    lv_bar_set_value(ui->screen_bar_1, 0, LV_ANIM_OFF);
+    lv_bar_set_value(ui->screen_bar_1, 100, LV_ANIM_ON);
     lv_obj_set_pos(ui->screen_bar_1, 253, 351);
     lv_obj_set_size(ui->screen_bar_1, 294, 20);
 
@@ -170,7 +170,8 @@ void setup_scr_screen(lv_ui *ui)
     //Write codes screen_image2
     ui->screen_image2 = lv_img_create(ui->screen);
     lv_obj_add_flag(ui->screen_image2, LV_OBJ_FLAG_CLICKABLE);
-    lv_img_set_src(ui->screen_image2, "0:/yunshang_images/screen/image2.bin");
+    //lv_img_set_src(ui->screen_image2, "0:/yunshang_images/screen/animals.bin");
+    lv_img_set_src(ui->screen_image2, &_image5_alpha_165x123);
     lv_img_set_pivot(ui->screen_image2, 50,50);
     lv_img_set_angle(ui->screen_image2, 300);
     lv_obj_set_pos(ui->screen_image2, 52, 23);

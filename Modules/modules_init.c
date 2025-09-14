@@ -10,6 +10,6 @@ void modeules_init(void)
 {
     dwt_init();
     sdram_init();
-    //mpu_memory_protection();
+    mpu_memory_protection();
     iic_init();
 }

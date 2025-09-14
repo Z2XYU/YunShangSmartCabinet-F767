@@ -5,11 +5,12 @@
 
 #define IMG_NUM 1
 uint8_t background_img[800 * 480 * 2] __attribute__((section(".sdram_data")));
-uint8_t location_img[600 * 450 * 2] __attribute__((section(".sdram_data")));
+//uint8_t location_img[600 * 450 * 2] __attribute__((section(".sdram_data")));
 
 ImageRes_t images[] = {
     {"0:/background.bin", 800, 480, {{0}}, background_img},
-    {"0:/yunshang_images/screen_1/location.bin", 600, 450, {{0}}, location_img}};
+    //{"0:/yunshang_images/screen_1/location.bin", 600, 450, {{0}}, location_img}
+};
 
 static int image_load_to_sdram(ImageRes_t *img)
 {
@@ -48,7 +49,8 @@ static int image_load_to_sdram(ImageRes_t *img)
 
 void load_all_image(void)
 {
-
+    // printf("background_img addr = 0x%08X\r\n", (unsigned int)background_img);
+    // printf("location_img  addr = 0x%08X\r\n", (unsigned int)location_img);
     for (int i = 0; i < IMG_NUM; i++)
     {
         if (images[i].buf == NULL)

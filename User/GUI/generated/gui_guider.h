@@ -85,6 +85,7 @@ void setup_scr_screen(lv_ui *ui);
 void setup_scr_screen_1(lv_ui *ui);
 
 LV_IMG_DECLARE(_locatiom_alpha_200x150);
+LV_IMG_DECLARE(_image5_alpha_165x123);
 
 LV_FONT_DECLARE(lv_font_AlexBrush_Regular_40)
 LV_FONT_DECLARE(lv_font_simsun_20)
