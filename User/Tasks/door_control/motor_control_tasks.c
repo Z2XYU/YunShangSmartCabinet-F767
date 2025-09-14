@@ -67,7 +67,6 @@ void motor_control_tasks_init(void)
 {
 
     motors_init();
-    sensor_init();
     doors_init();
 
     motorControlMsgQueueHandle = osMessageQueueNew(10, sizeof(WifiMessage_t), &motorControlMsgQueue_attributes);

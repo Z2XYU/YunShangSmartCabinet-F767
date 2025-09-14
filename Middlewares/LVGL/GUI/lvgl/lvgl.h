@@ -63,10 +63,12 @@ extern "C" {
 
 #include "src/lv_api_map.h"
 
+
 /*-----------------
  * EXTRAS
  *----------------*/
 #include "src/extra/lv_extra.h"
+#include "images_load.h"
 
 /*********************
  *      DEFINES

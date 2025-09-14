@@ -16,6 +16,7 @@ extern "C" {
 #include "lvgl.h"
 #include "gui_guider.h"
 
+
 __attribute__((unused)) void kb_event_cb(lv_event_t *e);
 __attribute__((unused)) void ta_event_cb(lv_event_t *e);
 #if LV_USE_ANALOGCLOCK != 0
@@ -23,6 +24,10 @@ void clock_count(int *hour, int *min, int *sec);
 #endif
 
 
+void screen_1_digital_clock_1_timer(lv_timer_t *timer);
+void screen_1_datetext_1_event_handler(lv_event_t *e);
+void screen_1_datetext_1_calendar_event_handler(lv_event_t *e);
+void screen_1_datetext_1_init_calendar(lv_obj_t *obj, char * s);
 
 #ifdef __cplusplus
 }

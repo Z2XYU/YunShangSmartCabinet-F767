@@ -14,7 +14,6 @@ extern "C" {
 #endif
 
 #include "lvgl.h"
-#include "lvgl_image.h"
 
 typedef struct
 {
@@ -22,13 +21,43 @@ typedef struct
 	lv_obj_t *screen;
 	bool screen_del;
 	lv_obj_t *screen_spinner_1;
-	lv_obj_t *screen_label_1;
-	lv_obj_t *screen_label_2;
+	lv_obj_t *screen_yunshang_iot;
+	lv_obj_t *screen_load;
 	lv_obj_t *screen_bar_1;
-	lv_obj_t *screen_YunShang_City;
-	lv_obj_t *screen_YunShang_IOT_log;
+	lv_obj_t *screen_yunshang_city;
+	lv_obj_t *screen_logo;
 	lv_obj_t *screen_image1;
 	lv_obj_t *screen_image2;
+	lv_obj_t *screen_1;
+	bool screen_1_del;
+	lv_obj_t *screen_1_label_1;
+	lv_obj_t *screen_1_label_2;
+	lv_obj_t *screen_1_label_3;
+	lv_obj_t *screen_1_heating_img;
+	lv_obj_t *screen_1_heat_sw;
+	lv_obj_t *screen_1_cooling_img;
+	lv_obj_t *screen_1_loop_img;
+	lv_obj_t *screen_1_manual_img;
+	lv_obj_t *screen_1_smart_img;
+	lv_obj_t *screen_1_automatic_img;
+	lv_obj_t *screen_1_cool_sw;
+	lv_obj_t *screen_1_digital_clock_1;
+	lv_obj_t *screen_1_datetext_1;
+	lv_obj_t *screen_1_label_4;
+	lv_obj_t *screen_1_TH_img;
+	lv_obj_t *screen_1_label_6;
+	lv_obj_t *screen_1_chart_1;
+	lv_chart_series_t *screen_1_chart_1_0;
+	lv_obj_t *screen_1_label_7;
+	lv_obj_t *screen_1_qrcode_1;
+	lv_obj_t *screen_1_plasma_img;
+	lv_obj_t *screen_1_loop_sw;
+	lv_obj_t *screen_1_plasma_sw;
+	lv_obj_t *screen_1_label_8;
+	lv_obj_t *screen_1_location_img;
+	lv_obj_t *screen_1_label_9;
+	lv_obj_t *screen_1_label_10;
+	lv_obj_t *screen_1_line_1;
 }lv_ui;
 
 typedef void (*ui_setup_scr_t)(lv_ui * ui);
@@ -53,10 +82,14 @@ extern lv_ui guider_ui;
 
 
 void setup_scr_screen(lv_ui *ui);
+void setup_scr_screen_1(lv_ui *ui);
+
+LV_IMG_DECLARE(_locatiom_alpha_200x150);
 
 LV_FONT_DECLARE(lv_font_AlexBrush_Regular_40)
-LV_FONT_DECLARE(lv_font_montserratMedium_16)
 LV_FONT_DECLARE(lv_font_simsun_20)
+LV_FONT_DECLARE(lv_font_Alatsi_Regular_45)
+LV_FONT_DECLARE(lv_font_simsun_16)
 
 
 #ifdef __cplusplus

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "gui_guider.h"
 #include "widgets_init.h"
+#include "custom.h"
 
 #if LV_USE_GUIDER_SIMULATOR && LV_USE_FREEMASTER
 #include "gg_external_data.h"
@@ -76,6 +77,7 @@ void init_scr_del_flag(lv_ui *ui)
 {
 
     ui->screen_del = true;
+    ui->screen_1_del = true;
 }
 
 void setup_ui(lv_ui *ui)
@@ -83,6 +85,7 @@ void setup_ui(lv_ui *ui)
     init_scr_del_flag(ui);
     init_keyboard(ui);
     setup_scr_screen(ui);
+    custom_init(ui);
     lv_scr_load(ui->screen);
 }
 

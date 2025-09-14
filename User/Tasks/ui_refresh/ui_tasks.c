@@ -10,14 +10,13 @@
 #include "gui_guider.h"
 #include "events_init.h"
 #include "stdio.h"
-#include "lvgl_image.h"
 #include "sdram.h"
 
 osThreadId_t lvglRefreshTaskHandle;
 const osThreadAttr_t lvglRefreshTask_attributes = {
     .name = "lvglRefreshTas",
     .stack_size = 1024 * 4,
-    .priority = (osPriority_t)osPriorityNormal,
+    .priority = (osPriority_t)osPriorityAboveNormal,
 };
 
 

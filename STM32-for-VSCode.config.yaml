@@ -110,9 +110,10 @@ sourceFiles:
   - Middlewares/LVGL/GUI/lvgl/src/misc/**
   - Middlewares/LVGL/GUI/lvgl/src/extra/**
   - Middlewares/LVGL/GUI/lvgl/src/widgets/**
+  
   - Middlewares/LVGL/GUI/lvgl/src/font/lv_font.c
   - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_fmt_txt.c
-  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_14.c
+  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_16.c
 
   
 
