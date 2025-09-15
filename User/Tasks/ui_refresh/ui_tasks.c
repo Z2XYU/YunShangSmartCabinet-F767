@@ -11,6 +11,9 @@
 #include "events_init.h"
 #include "stdio.h"
 #include "sdram.h"
+#include "env_meas_tasks.h"
+#include "custom.h"
+#include "sh40.h"
 
 osThreadId_t lvglRefreshTaskHandle;
 const osThreadAttr_t lvglRefreshTask_attributes = {
@@ -19,7 +22,6 @@ const osThreadAttr_t lvglRefreshTask_attributes = {
     .priority = (osPriority_t)osPriorityAboveNormal,
 };
 
-
 lv_ui guider_ui;
 
 void ui_refresh_tasks_init(void)
@@ -27,19 +29,41 @@ void ui_refresh_tasks_init(void)
     lvglRefreshTaskHandle = osThreadNew(lvglRefreshTask, NULL, &lvglRefreshTask_attributes);
 }
 
+static void ui_temperature_humidity_refresh(SH40_t *sh40_sensor)
+{
+    if (guider_ui.screen_1_label_6 != NULL)
+    {
+        lv_label_set_text_fmt(guider_ui.screen_1_label_6, "%.1f°C", sh40_sensor->temperature);
+    }
+    if (guider_ui.screen_1_label_7 != NULL)
+    {
+        lv_label_set_text_fmt(guider_ui.screen_1_label_7, "%.1f%%", sh40_sensor->humidity);
+    }
+}
+
+static void ui_prama_refresh_cb(lv_timer_t * timer)
+{
+    LV_UNUSED(timer);
+    if (osMutexAcquire(sh40MeasMutexHandle, 5) == osOK)
+    {
+        ui_temperature_humidity_refresh(&sh40_sensor);
+        osMutexRelease(sh40MeasMutexHandle);
+    }
+}
 
 void lvglRefreshTask(void *argument)
 {
     lv_init();
     lv_port_disp_init();
     lv_port_indev_init();
-    
-    //osDelay(1000);
+
     load_all_image();
 
     setup_ui(&guider_ui);
     events_init(&guider_ui);
-    
+
+    lv_timer_create(ui_prama_refresh_cb, 200, NULL);
+
     while (1)
     {
         lv_timer_handler();
