@@ -50,6 +50,7 @@ assemblyFlags:
 
 linkerFlags: 
   - -Wl,--print-memory-usage
+  - -u _printf_float
 
 
 # libraries to be included. The -l prefix to the library will be automatically added.
@@ -100,21 +101,10 @@ sourceFiles:
   - Modules/**
   - User/Tasks/**
   - User/GUI/**
+  - User/utils/**
   - Middlewares/MQTT/**
   - Middlewares/cJSON/**
-
-  - Middlewares/LVGL/GUI/porting/**
-  - Middlewares/LVGL/GUI/lvgl/src/core/**   
-  - Middlewares/LVGL/GUI/lvgl/src/draw/**   
-  - Middlewares/LVGL/GUI/lvgl/src/hal/**   
-  - Middlewares/LVGL/GUI/lvgl/src/misc/**
-  - Middlewares/LVGL/GUI/lvgl/src/extra/**
-  - Middlewares/LVGL/GUI/lvgl/src/widgets/**
-  
-  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font.c
-  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_fmt_txt.c
-  - Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_16.c
-
+  - Middlewares/LVGL/**
   
 
 # When no makefile is present it will show a warning pop-up.
