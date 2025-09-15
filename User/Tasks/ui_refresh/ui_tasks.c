@@ -14,7 +14,7 @@
 
 osThreadId_t lvglRefreshTaskHandle;
 const osThreadAttr_t lvglRefreshTask_attributes = {
-    .name = "lvglRefreshTas",
+    .name = "lvglRefreshTask",
     .stack_size = 1024 * 4,
     .priority = (osPriority_t)osPriorityAboveNormal,
 };
