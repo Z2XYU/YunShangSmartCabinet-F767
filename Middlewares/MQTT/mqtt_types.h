@@ -32,11 +32,11 @@ typedef struct
 typedef struct
 {
     char client_id[32];     // 客户端 ID（唯一标识设备）
-    char username[32];      // 用户名（可选）
-    char password[32];      // 密码（可选）
+    char username[32];      
+    char password[32];      
 
     char server[64];        // MQTT 服务器地址（IP 或域名）
-    char port[8];          // MQTT 服务器端口（一般 1883 或 8883）
+    char port[8];          
 
     char keepalive[8];     // 保活时间（单位：秒）
 

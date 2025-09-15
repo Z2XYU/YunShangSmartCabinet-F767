@@ -5,6 +5,8 @@
 #include "stepper_motor.h"
 #include "plasma.h"
 #include "Clock/clock.h"
+#include "rfid_sensing_task.h"
+#include "stdio.h"
 
 osMessageQueueId_t motorControlMsgQueueHandle;
 const osMessageQueueAttr_t motorControlMsgQueue_attributes = {
@@ -143,11 +145,19 @@ void motorCommTask(void *argument)
                 {
                     if (strcmp(msg.data.control_cmd.option, "open") == 0)
                     {
-                        open_cmd(&msg);
+                        
+                        if(osSemaphoreAcquire(recogDoneSemaphoreHandle,10000)==osOK)
+                        {
+                            open_cmd(&msg);
+                        }
+                        else
+                        {
+                            /*预留PCF8574 IO 扩展芯片*/
+                            printf("检测失败\r\n");
+                        }
                     }
                     else if (strcmp(msg.data.control_cmd.option, "close") == 0)
                     {
-                        /* 后续添加 RFID 溯源机制*/
                         close_cmd(&msg);
                     }
                 }

@@ -59,10 +59,18 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define ReedSwitch2_Pin GPIO_PIN_11
 #define ReedSwitch2_GPIO_Port GPIOI
+#define RC522_CS_Pin GPIO_PIN_4
+#define RC522_CS_GPIO_Port GPIOA
+#define RC522_SCK_Pin GPIO_PIN_5
+#define RC522_SCK_GPIO_Port GPIOA
+#define RC522_MISO_Pin GPIO_PIN_6
+#define RC522_MISO_GPIO_Port GPIOA
 #define LED1_Pin GPIO_PIN_0
 #define LED1_GPIO_Port GPIOB
 #define LED0_Pin GPIO_PIN_1
 #define LED0_GPIO_Port GPIOB
+#define RC522_RST_Pin GPIO_PIN_2
+#define RC522_RST_GPIO_Port GPIOB
 #define MOTOR1_DIR_Pin GPIO_PIN_6
 #define MOTOR1_DIR_GPIO_Port GPIOH
 #define MOTOR2_STEP_Pin GPIO_PIN_11
@@ -77,6 +85,8 @@ void Error_Handler(void);
 #define plasmas1_GPIO_Port GPIOD
 #define plasmas2_Pin GPIO_PIN_4
 #define plasmas2_GPIO_Port GPIOD
+#define RC522_MOSI_Pin GPIO_PIN_7
+#define RC522_MOSI_GPIO_Port GPIOD
 #define LCD_BL_Pin GPIO_PIN_5
 #define LCD_BL_GPIO_Port GPIOB
 
