@@ -14,8 +14,11 @@ extern "C" {
 #endif
 
 #include "gui_guider.h"
+#include "cmsis_os2.h"
+
 
 void custom_init(lv_ui *ui);
+
 
 #ifdef __cplusplus
 }

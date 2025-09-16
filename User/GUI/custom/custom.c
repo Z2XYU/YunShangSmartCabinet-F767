@@ -26,23 +26,6 @@
  *  STATIC PROTOTYPES
  **********************/
 
-/* 加载动画 */
-static void bar_anim_ready(lv_timer_t *timer)
-{
-    LV_UNUSED(timer);
-    ui_load_scr_animation(&guider_ui, &guider_ui.screen_1,
-                          guider_ui.screen_1_del, &guider_ui.screen_del,
-                          setup_scr_screen_1, LV_SCR_LOAD_ANIM_FADE_ON,
-                          0, 0, true, true);
-}
-
-void laod_bar_anim(void)
-{
-    // 3 秒后执行切换
-    lv_timer_t *t = lv_timer_create(bar_anim_ready, 3000, NULL);
-    lv_timer_set_repeat_count(t, 1); // 执行一次
-}
-
 /**********************
  *  STATIC VARIABLES
  **********************/
@@ -54,5 +37,4 @@ void laod_bar_anim(void)
 void custom_init(lv_ui *ui)
 {
     /* Add your codes here */
-    laod_bar_anim();
 }

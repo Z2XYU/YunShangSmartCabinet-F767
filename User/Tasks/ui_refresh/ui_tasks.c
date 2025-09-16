@@ -24,8 +24,11 @@ const osThreadAttr_t lvglRefreshTask_attributes = {
 
 lv_ui guider_ui;
 
+osSemaphoreId_t systemInitSemaphore;
+
 void ui_refresh_tasks_init(void)
 {
+    systemInitSemaphore = osSemaphoreNew(1,0,NULL);
     lvglRefreshTaskHandle = osThreadNew(lvglRefreshTask, NULL, &lvglRefreshTask_attributes);
 }
 
@@ -41,7 +44,7 @@ static void ui_temperature_humidity_refresh(SH40_t *sh40_sensor)
     }
 }
 
-static void ui_prama_refresh_cb(lv_timer_t * timer)
+static void ui_prama_refresh_cb(lv_timer_t *timer)
 {
     LV_UNUSED(timer);
     if (osMutexAcquire(sh40MeasMutexHandle, 5) == osOK)
@@ -62,10 +65,18 @@ void lvglRefreshTask(void *argument)
     setup_ui(&guider_ui);
     events_init(&guider_ui);
 
-    lv_timer_create(ui_prama_refresh_cb, 200, NULL);
+    lv_timer_create(ui_prama_refresh_cb, 1000, NULL);
 
     while (1)
     {
+        if (osSemaphoreAcquire(systemInitSemaphore, 0) == osOK)
+        {
+            ui_load_scr_animation(&guider_ui, &guider_ui.screen_1,
+                                  guider_ui.screen_1_del, &guider_ui.screen_del,
+                                  setup_scr_screen_1, LV_SCR_LOAD_ANIM_FADE_ON,
+                                  0, 0, true, true);
+                printf("切换\n");
+        }
         lv_timer_handler();
         osDelay(5);
     }
