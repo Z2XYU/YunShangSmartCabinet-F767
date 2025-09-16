@@ -51,6 +51,7 @@ void clock_get_time(void)
 extern int screen_1_digital_clock_1_hour_value;
 extern int screen_1_digital_clock_1_min_value;
 extern int screen_1_digital_clock_1_sec_value;
+extern char screen_1_date_text[16];
 
 /*保留 通过 wifi 获取网络时间*/
 void clock_set_time(Clock_t *clk)
@@ -61,6 +62,5 @@ void clock_set_time(Clock_t *clk)
     screen_1_digital_clock_1_min_value = clk->sTime.Minutes;
     screen_1_digital_clock_1_sec_value = clk->sTime.Seconds;
 
-    lv_label_set_text_fmt(guider_ui.screen_1_datetext_1, "%04d/%02d/%02d",
-                          clk->sDate.Year + 2000, clk->sDate.Month, clk->sDate.Date);
+    sprintf(screen_1_date_text, "%04d/%02d/%02d",clk->sDate.Year+2000,clk->sDate.Month,clk->sDate.Date);
 }

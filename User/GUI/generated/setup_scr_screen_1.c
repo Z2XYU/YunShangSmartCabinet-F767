@@ -17,6 +17,8 @@
 int screen_1_digital_clock_1_min_value = 0;
 int screen_1_digital_clock_1_hour_value = 0;
 int screen_1_digital_clock_1_sec_value = 0;
+
+char date_text[16];
 void setup_scr_screen_1(lv_ui *ui)
 {
     // Write codes screen_1
@@ -276,7 +278,7 @@ void setup_scr_screen_1(lv_ui *ui)
 
     // Write codes screen_1_datetext_1
     ui->screen_1_datetext_1 = lv_label_create(ui->screen_1);
-    lv_label_set_text(ui->screen_1_datetext_1, "2025/01/01");
+    lv_label_set_text(ui->screen_1_datetext_1, date_text);
     lv_obj_set_style_text_align(ui->screen_1_datetext_1, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_add_flag(ui->screen_1_datetext_1, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(ui->screen_1_datetext_1, screen_1_datetext_1_event_handler, LV_EVENT_ALL, NULL);
