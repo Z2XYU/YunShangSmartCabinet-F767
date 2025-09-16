@@ -6,6 +6,10 @@
 #include "stdio.h"
 #include "mqtt_message.h"
 #include "motor_control_tasks.h"
+#include "clock.h"
+#include "gui_guider.h"
+#include "custom.h"
+#include "ui_tasks.h"
 
 static char uart_buf[512];
 
@@ -13,11 +17,13 @@ static char uart_buf[512];
 static void status_handle(WifiMessage_t *msg, cJSON *data);
 static void notice_hanle(WifiMessage_t *msg, cJSON *data);
 static void door_control_handle(WifiMessage_t *msg, cJSON *data);
+static void beijing_time_handle(WifiMessage_t *msg, cJSON *data);
 
 #define WIFI_CMD_TABLE_SIZE 2
 WifiCmdMap_t wifi_cmd_table[] = {
     {"status", status_handle},
     {"notice", notice_hanle},
+
 };
 
 #define MQTT_CMD_TABLE_SIZE 2
@@ -26,15 +32,18 @@ MqttCmdMap_t mqtt_cmd_table[] = {
     {"door_control", door_control_handle},
 };
 
+#define HTTP_CMD_TABLE_SIZE 1
+HttpCmdMap_t http_cmd_table[] = {
+    {"get_time", beijing_time_handle}};
+
 // 向消息队列发送消息
 osStatus_t wifi_send_msg_to_queue(const WifiCommand_t *cmd, uint32_t timeout_ms)
 {
     return osMessageQueuePut(
-        wifiSendQueueHandle, 
+        wifiSendQueueHandle,
         cmd,
-        0,         
-        timeout_ms 
-    );
+        0,
+        timeout_ms);
 }
 
 osStatus_t wifi_recv_msg_to_queue(const WifiMessage_t *msg, uint32_t timeout_ms)
@@ -121,6 +130,13 @@ void wifi_send_message_handle(WifiCommand_t *msg)
             cJSON_AddItemToObject(root, "data", data);
         }
     }
+    else if (strcmp(msg->type, "http") == 0)
+    {
+        if (strcmp(msg->cmd, "get_time") == 0)
+        {
+            printf("获取时间命令\n");
+        }
+    }
 
     out = cJSON_PrintUnformatted(root);
     if (out != NULL)
@@ -150,6 +166,9 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
             if (strcmp(msg->data.notice, "wifi_connected") == 0)
             {
                 mqtt_connect();
+                /*获取北京时间*/
+                osDelay(100);
+                clock_get_time();
             }
         }
     }
@@ -162,9 +181,18 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
                 mqtt_subscribe_tpoic("control", 0);
             }
         }
-        else if(strcmp(msg->cmd,"door_control")==0)
+        else if (strcmp(msg->cmd, "door_control") == 0)
         {
-            osMessageQueuePut(motorControlMsgQueueHandle,msg,0,0);
+            osMessageQueuePut(motorControlMsgQueueHandle, msg, 0, 0);
+        }
+    }
+    else if (strcmp(msg->type, "http") == 0)
+    {
+        if (strcmp(msg->cmd, "get_time") == 0)
+        {
+            clock_set_time(&msg->data.clock);
+            printf("设置时间\n");
+            osSemaphoreRelease(systemInitSemaphore);
         }
     }
 }
@@ -229,7 +257,57 @@ void wifi_recv_msg_parse(WifiMessage_t *msg, const char *json_str)
             }
         }
     }
+    else if (strcmp(msg->type, "http") == 0)
+    {
+        cJSON *cmd_item = cJSON_GetObjectItem(root, "cmd");
+        if (cJSON_IsString(cmd_item) && cmd_item->valuestring != NULL)
+        {
+            strncpy(msg->cmd, cmd_item->valuestring, sizeof(msg->cmd) - 1);
+            msg->cmd[sizeof(msg->cmd) - 1] = '\0';
+        }
+        for (size_t i = 0; i < HTTP_CMD_TABLE_SIZE; i++)
+        {
+            if (strcmp(msg->cmd, http_cmd_table[i].cmd) == 0)
+            {
+                if (http_cmd_table[i].handler != NULL)
+                {
+                    cJSON *data_item = cJSON_GetObjectItem(root, "data");
+                    http_cmd_table[i].handler(msg, data_item);
+                }
+                break;
+            }
+        }
+    }
+
     cJSON_Delete(root);
+}
+
+static void beijing_time_handle(WifiMessage_t *msg, cJSON *data)
+{
+    if (!msg || !data)
+        return;
+    printf("处理时间\n");
+    if (cJSON_IsString(data))
+    {
+        int year, month, day, hour, min, sec;
+        sscanf(data->valuestring, "%d-%d-%d %d:%d:%d",
+               &year, &month, &day, &hour, &min, &sec);
+
+        msg->data.clock.sDate.Year = year - 2000;
+        msg->data.clock.sDate.Month = month;
+        msg->data.clock.sDate.Date = day;
+        msg->data.clock.sTime.Hours = hour;
+        msg->data.clock.sTime.Minutes = min;
+        msg->data.clock.sTime.Seconds = sec;
+
+        printf("解析到的时间: %04d-%02d-%02d %02d:%02d:%02d\r\n",
+               msg->data.clock.sDate.Year,
+               msg->data.clock.sDate.Month,
+               msg->data.clock.sDate.Date,
+               msg->data.clock.sTime.Hours,
+               msg->data.clock.sTime.Minutes,
+               msg->data.clock.sTime.Seconds);
+    }
 }
 
 static void notice_hanle(WifiMessage_t *msg, cJSON *data)
