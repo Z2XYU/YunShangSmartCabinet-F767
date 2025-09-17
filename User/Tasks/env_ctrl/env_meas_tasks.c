@@ -5,7 +5,7 @@
 #include "custom.h"
 
 osThreadId_t envMeasTaskHandle;
-const osThreadAttr_t envMeasTas_attributes = {
+const osThreadAttr_t envMeasTask_attributes = {
     .name = "envMeasTask",
     .stack_size = 128 * 8,
     .priority = (osPriority_t)osPriorityNormal};
@@ -21,9 +21,9 @@ void env_meas_tasks_init(void)
     sh40MeasMutexHandle = osMutexNew(&sh40MeasMutex_attributes);
     if (sh40MeasMutexHandle == NULL)
     {
-        //printf("Failed to create SH40 mutex!\r\n");
+        // printf("Failed to create SH40 mutex!\r\n");
     }
-    envMeasTaskHandle = osThreadNew(envMeasTask, NULL, &envMeasTas_attributes);
+    envMeasTaskHandle = osThreadNew(envMeasTask, NULL, &envMeasTask_attributes);
 }
 
 void envMeasTask(void *argument)
@@ -34,7 +34,7 @@ void envMeasTask(void *argument)
 
         if (sensor.humidity == SH40_INVALID_VALUE || sensor.temperature == SH40_INVALID_VALUE)
         {
-            //printf("SH40 measurement failed\r\n");
+            // printf("SH40 measurement failed\r\n");
         }
         else
         {
@@ -42,11 +42,11 @@ void envMeasTask(void *argument)
             {
                 sh40_sensor = sensor;
                 osMutexRelease(sh40MeasMutexHandle);
-                //printf("humi: %.2f temp:%.2f\n", sh40_sensor.humidity, sh40_sensor.temperature);
+                // printf("humi: %.2f temp:%.2f\n", sh40_sensor.humidity, sh40_sensor.temperature);
             }
             else
             {
-                //printf("Failed to acquire SH40 mutex!\r\n");
+                // printf("Failed to acquire SH40 mutex!\r\n");
             }
         }
         osDelay(1000);
