@@ -170,7 +170,6 @@ void setup_scr_screen(lv_ui *ui)
     //Write codes screen_image2
     ui->screen_image2 = lv_img_create(ui->screen);
     lv_obj_add_flag(ui->screen_image2, LV_OBJ_FLAG_CLICKABLE);
-    //lv_img_set_src(ui->screen_image2, "0:/yunshang_images/screen/animals.bin");
     lv_img_set_src(ui->screen_image2, &_image5_alpha_165x123);
     lv_img_set_pivot(ui->screen_image2, 50,50);
     lv_img_set_angle(ui->screen_image2, 300);
