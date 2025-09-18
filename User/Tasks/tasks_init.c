@@ -5,6 +5,7 @@
 #include "ui_refresh/ui_tasks.h"
 #include "rfid_sensing_task.h"
 #include "env_meas_tasks.h"
+#include "tc_tasks.h"
 
 void tasks_init(void)
 {
@@ -13,4 +14,5 @@ void tasks_init(void)
     motor_control_tasks_init();
     rfid_task_init();
     env_meas_tasks_init();
+    tc_tasks_init();
 }
