@@ -11,6 +11,12 @@
 #include <stdio.h>
 #include "lvgl.h"
 
+#include "ptc.h"
+#include "tec.h"
+#include "fan.h"
+#include "plasma.h"
+#include <stdio.h>
+
 #if LV_USE_GUIDER_SIMULATOR && LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
@@ -24,6 +30,16 @@ static void screen_1_heat_sw_event_handler (lv_event_t *e)
     {
         lv_obj_t * status_obj = lv_event_get_target(e);
         int status = lv_obj_has_state(status_obj, LV_STATE_CHECKED) ? true : false;
+        if(status)
+        {
+            ptc_set_power(100);
+            printf("ptc_set_100\n");
+        }
+        else
+        {
+            ptc_set_power(0);
+            printf("ptc_set_0\n");
+        }
         break;
     }
     default:
@@ -79,6 +95,14 @@ static void screen_1_cool_sw_event_handler (lv_event_t *e)
     {
         lv_obj_t * status_obj = lv_event_get_target(e);
         int status = lv_obj_has_state(status_obj, LV_STATE_CHECKED) ? true : false;
+        if(status)
+        {
+            tec_set_power(100);
+        }
+        else
+        {
+            tec_set_power(0);
+        }
         break;
     }
     default:
@@ -94,6 +118,14 @@ static void screen_1_loop_sw_event_handler (lv_event_t *e)
     {
         lv_obj_t * status_obj = lv_event_get_target(e);
         int status = lv_obj_has_state(status_obj, LV_STATE_CHECKED) ? true : false;
+        if(status)
+        {
+            fan_set_power(100);
+        }
+        else
+        {
+            fan_set_power(0);
+        }
         break;
     }
     default:
@@ -109,6 +141,14 @@ static void screen_1_plasma_sw_event_handler (lv_event_t *e)
     {
         lv_obj_t * status_obj = lv_event_get_target(e);
         int status = lv_obj_has_state(status_obj, LV_STATE_CHECKED) ? true : false;
+        if(status)
+        {
+            plasma_on_all();
+        }
+        else
+        {
+            plasma_off_all();
+        }
         break;
     }
     default:

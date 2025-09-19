@@ -6,3 +6,4 @@
 
 void fan_on(void);
 void fan_off(void);
+void fan_set_power(uint8_t power);

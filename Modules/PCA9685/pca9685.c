@@ -44,13 +44,13 @@ void pca9685_set_frequency(uint16_t freq)
 
     // 进入睡眠模式，设置频率
     pca9685_write_reg(MODE1_REG, 0x80);  // 进入睡眠模式
-    HAL_Delay(10);                   // 等待 10ms
+    dwt_delay_ms(10);                   // 等待 10ms
 
     pca9685_write_reg(PRESCALE_REG, prescale);   // 设置分频器
-    HAL_Delay(10);                   // 等待 10ms
+    dwt_delay_ms(10);                   // 等待 10ms
 
     pca9685_write_reg(MODE1_REG, 0xA1);  // 退出睡眠模式
-    HAL_Delay(10);                   // 等待 10ms
+    dwt_delay_ms(10);                   // 等待 10ms
 }
 
 // 设置单通道 PWM
