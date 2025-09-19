@@ -16,6 +16,13 @@
 #define MODE1_AUTOINC   0x20
 #define MODE1_ALLCALL   0x01
 
+#define PTC1_CHANNEL 0
+#define PTC2_CHANNEL 1
+#define TEC1_CHANNEL 2
+#define TEC2_CHANNEL 3
+#define FAN_CHANNEL 4
+
+
 void pca9685_init(uint16_t freq);
 void pca9685_write_reg(uint8_t reg, uint8_t data);
 uint8_t pca9685_read_reg(uint8_t reg);

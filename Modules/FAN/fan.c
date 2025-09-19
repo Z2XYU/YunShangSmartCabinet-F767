@@ -1,11 +1,16 @@
 #include "fan.h"
 
+void fan_set_power(uint8_t power)
+{
+    pca9685_set_duty(FAN_CHANNEL,power);
+}
+
 void fan_on(void)
 {
-    HAL_GPIO_WritePin(FAN_GPIO_Port,FAN_Pin,GPIO_PIN_RESET);
+    pca9685_set_duty(FAN_CHANNEL,100);
 }
 
 void fan_off(void)
 {
-    HAL_GPIO_WritePin(FAN_GPIO_Port,FAN_Pin,GPIO_PIN_SET);
+    pca9685_set_duty(FAN_CHANNEL,0);
 }
