@@ -5,7 +5,7 @@
 
 #define IMG_NUM 1
 uint8_t background_img[800 * 480 * 2] __attribute__((section(".sdram_data")));
-//uint8_t location_img[600 * 450 * 2] __attribute__((section(".sdram_data")));
+// uint8_t location_img[600 * 450 * 2] __attribute__((section(".sdram_data")));
 
 ImageRes_t images[] = {
     {"0:/background.bin", 800, 480, {{0}}, background_img},
@@ -26,7 +26,7 @@ static int image_load_to_sdram(ImageRes_t *img)
     res = f_open(&file, img->path, FA_READ);
     if (res != FR_OK)
     {
-        printf("open %s failed res=%d\r\n", img->path, res);
+        // printf("open %s failed res=%d\r\n", img->path, res);
         return -1;
     }
 
@@ -55,13 +55,16 @@ void load_all_image(void)
     {
         if (images[i].buf == NULL)
         {
-            printf("image %d buffer not assigned\n", i);
+            // printf("image %d buffer not assigned\n", i);
             continue;
         }
-
         if (image_load_to_sdram(&images[i]) == 0)
-            printf("加载 image%d 成功\r\n", i);
+        {
+            // printf("加载 image%d 成功\r\n", i);
+        }
         else
-            printf("加载 image%d 失败\r\n", i);
+        {
+            // printf("加载 image%d 失败\r\n", i);
+        }
     }
 }

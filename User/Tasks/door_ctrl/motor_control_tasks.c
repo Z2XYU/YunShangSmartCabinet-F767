@@ -153,7 +153,7 @@ void motorCommTask(void *argument)
                         else
                         {
                             /*预留PCF8574 IO 扩展芯片*/
-                            printf("检测失败\r\n");
+                            //printf("检测失败\r\n");
                         }
                     }
                     else if (strcmp(msg.data.control_cmd.option, "close") == 0)

@@ -271,7 +271,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     wifi_rx_buf[Size] = '\0';
 
     
-    printf("rx:%s\n",wifi_rx_buf);
+    //printf("rx:%s\n",wifi_rx_buf);
     wifi_recv_msg_parse(&msg,(char*)wifi_rx_buf);
 
     wifi_recv_msg_to_queue(&msg,0);

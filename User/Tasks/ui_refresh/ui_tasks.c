@@ -75,7 +75,7 @@ void lvglRefreshTask(void *argument)
                                   guider_ui.screen_1_del, &guider_ui.screen_del,
                                   setup_scr_screen_1, LV_SCR_LOAD_ANIM_FADE_ON,
                                   0, 0, true, true);
-                printf("切换\n");
+                //printf("切换\n");
         }
         lv_timer_handler();
         osDelay(5);

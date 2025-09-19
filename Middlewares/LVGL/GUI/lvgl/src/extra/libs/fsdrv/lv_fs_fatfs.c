@@ -102,12 +102,11 @@ static void fs_init(void)
     FRESULT res = f_mount(&SDFatFS, "0:", 1);
     if (res != FR_OK)
     {
-        printf("[FatFS] 挂载失败，错误码: %d\n", res);
-        // 可选：重试或错误处理
+        //printf("[FatFS] 挂载失败，错误码: %d\n", res);
     }
     else
     {
-        printf("[FatFS] 挂载成功，盘符: %s\n", "0:");
+        //printf("[FatFS] 挂载成功，盘符: %s\n", "0:");
     }
 }
 

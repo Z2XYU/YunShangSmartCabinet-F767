@@ -134,7 +134,7 @@ void wifi_send_message_handle(WifiCommand_t *msg)
     {
         if (strcmp(msg->cmd, "get_time") == 0)
         {
-            printf("获取时间命令\n");
+            //printf("获取时间命令\n");
         }
     }
 
@@ -191,7 +191,7 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
         if (strcmp(msg->cmd, "get_time") == 0)
         {
             clock_set_time(&msg->data.clock);
-            printf("设置时间\n");
+            //printf("设置时间\n");
             osSemaphoreRelease(systemInitSemaphore);
         }
     }
@@ -286,7 +286,7 @@ static void beijing_time_handle(WifiMessage_t *msg, cJSON *data)
 {
     if (!msg || !data)
         return;
-    printf("处理时间\n");
+    //printf("处理时间\n");
     if (cJSON_IsString(data))
     {
         int year, month, day, hour, min, sec;
@@ -300,13 +300,13 @@ static void beijing_time_handle(WifiMessage_t *msg, cJSON *data)
         msg->data.clock.sTime.Minutes = min;
         msg->data.clock.sTime.Seconds = sec;
 
-        printf("解析到的时间: %04d-%02d-%02d %02d:%02d:%02d\r\n",
-               msg->data.clock.sDate.Year,
-               msg->data.clock.sDate.Month,
-               msg->data.clock.sDate.Date,
-               msg->data.clock.sTime.Hours,
-               msg->data.clock.sTime.Minutes,
-               msg->data.clock.sTime.Seconds);
+        // printf("解析到的时间: %04d-%02d-%02d %02d:%02d:%02d\r\n",
+        //        msg->data.clock.sDate.Year,
+        //        msg->data.clock.sDate.Month,
+        //        msg->data.clock.sDate.Date,
+        //        msg->data.clock.sTime.Hours,
+        //        msg->data.clock.sTime.Minutes,
+        //        msg->data.clock.sTime.Seconds);
     }
 }
 
