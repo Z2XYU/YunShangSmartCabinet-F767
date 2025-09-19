@@ -2,9 +2,9 @@
 
 #include "main.h"
 #include "cmsis_os2.h"
-#include "sh40.h"
+#include "sht40.h"
 
-extern SH40_t sh40_sensor;
+extern SHT40_t sh40_sensor;
 extern osMutexId_t sh40MeasMutexHandle;
 extern osThreadId_t envMeasTaskHandle;;
 

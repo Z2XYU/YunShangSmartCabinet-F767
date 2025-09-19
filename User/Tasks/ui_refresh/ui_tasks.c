@@ -13,7 +13,7 @@
 #include "sdram.h"
 #include "env_meas_tasks.h"
 #include "custom.h"
-#include "sh40.h"
+#include "sht40.h"
 
 osThreadId_t lvglRefreshTaskHandle;
 const osThreadAttr_t lvglRefreshTask_attributes = {
@@ -32,7 +32,7 @@ void ui_refresh_tasks_init(void)
     lvglRefreshTaskHandle = osThreadNew(lvglRefreshTask, NULL, &lvglRefreshTask_attributes);
 }
 
-static void ui_temperature_humidity_refresh(SH40_t *sh40_sensor)
+static void ui_temperature_humidity_refresh(SHT40_t *sh40_sensor)
 {
     if (guider_ui.screen_1_label_6 != NULL)
     {

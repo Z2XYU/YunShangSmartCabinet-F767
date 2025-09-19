@@ -1,5 +1,5 @@
 #include "env_meas_tasks.h"
-#include "sh40.h"
+#include "sht40.h"
 #include "stdio.h"
 #include "gui_guider.h"
 #include "custom.h"
@@ -14,7 +14,7 @@ osMutexId_t sh40MeasMutexHandle;
 const osMutexAttr_t sh40MeasMutex_attributes = {
     .name = "sh40MeasMutex"};
 
-SH40_t sh40_sensor = {0};
+SHT40_t sh40_sensor = {0};
 
 void env_meas_tasks_init(void)
 {
@@ -30,7 +30,7 @@ void envMeasTask(void *argument)
 {
     while (1)
     {
-        SH40_t sensor = sh40_measurement_data();
+        SHT40_t sensor = sht40_measurement_data();
 
         if (sensor.humidity == SH40_INVALID_VALUE || sensor.temperature == SH40_INVALID_VALUE)
         {

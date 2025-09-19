@@ -1,4 +1,4 @@
-#include "sh40.h"
+#include "sht40.h"
 #include "soft_iic.h"
 #include "crc.h"
 #include "dwt.h"
@@ -16,9 +16,9 @@
 
 
 
-SH40_t sh40_measurement_data(void)
+SHT40_t sht40_measurement_data(void)
 {
-    SH40_t sensor={0};
+    SHT40_t sensor={0};
     iic_start();
     iic_send_byte(SH40_WRITE);
     iic_wait_ack();
@@ -69,7 +69,7 @@ SH40_t sh40_measurement_data(void)
     return sensor;
 }
 
-uint32_t sh40_read_serial_number(void)
+uint32_t sht40_read_serial_number(void)
 {
     uint32_t serial_number;
 

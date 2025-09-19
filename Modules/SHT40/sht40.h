@@ -8,7 +8,7 @@ typedef struct
 {
     float temperature;
     float humidity;
-} SH40_t;
+} SHT40_t;
 
-SH40_t sh40_measurement_data(void);
-uint32_t sh40_read_serial_number(void);
+SHT40_t sht40_measurement_data(void);
+uint32_t sht40_read_serial_number(void);
