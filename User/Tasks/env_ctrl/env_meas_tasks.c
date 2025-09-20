@@ -8,13 +8,13 @@ osThreadId_t envMeasTaskHandle;
 const osThreadAttr_t envMeasTask_attributes = {
     .name = "envMeasTask",
     .stack_size = 128 * 8,
-    .priority = (osPriority_t)osPriorityNormal};
+    .priority = (osPriority_t)osPriorityAboveNormal};
 
 osMutexId_t sh40MeasMutexHandle;
 const osMutexAttr_t sh40MeasMutex_attributes = {
     .name = "sh40MeasMutex"};
 
-SHT40_t sh40_sensor = {0};
+SHT40_t sht40_sensor = {0};
 
 void env_meas_tasks_init(void)
 {
@@ -40,7 +40,7 @@ void envMeasTask(void *argument)
         {
             if (osMutexAcquire(sh40MeasMutexHandle, 100) == osOK)
             {
-                sh40_sensor = sensor;
+                sht40_sensor = sensor;
                 osMutexRelease(sh40MeasMutexHandle);
                 // printf("humi: %.2f temp:%.2f\n", sh40_sensor.humidity, sh40_sensor.temperature);
             }

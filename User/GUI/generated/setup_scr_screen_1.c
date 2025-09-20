@@ -375,11 +375,11 @@ void setup_scr_screen_1(lv_ui *ui)
     lv_chart_set_zoom_y(ui->screen_1_chart_1, 256);
     ui->screen_1_chart_1_0 = lv_chart_add_series(ui->screen_1_chart_1, lv_color_hex(0x000000), LV_CHART_AXIS_PRIMARY_Y);
 #if LV_USE_FREEMASTER == 0
-    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 1);
-    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 20);
-    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 30);
-    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 40);
-    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 5);
+    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 0);
+    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 0);
+    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 0);
+    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 0);
+    lv_chart_set_next_value(ui->screen_1_chart_1, ui->screen_1_chart_1_0, 0);
 #endif
     lv_obj_set_pos(ui->screen_1_chart_1, 481, 233);
     lv_obj_set_size(ui->screen_1_chart_1, 205, 155);

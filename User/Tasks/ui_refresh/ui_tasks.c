@@ -28,19 +28,25 @@ osSemaphoreId_t systemInitSemaphore;
 
 void ui_refresh_tasks_init(void)
 {
-    systemInitSemaphore = osSemaphoreNew(1,0,NULL);
+    systemInitSemaphore = osSemaphoreNew(1, 0, NULL);
     lvglRefreshTaskHandle = osThreadNew(lvglRefreshTask, NULL, &lvglRefreshTask_attributes);
 }
 
-static void ui_temperature_humidity_refresh(SHT40_t *sh40_sensor)
+static void ui_temperature_humidity_refresh(SHT40_t *sht40_sensor)
 {
+    static volatile int count = 0;
     if (guider_ui.screen_1_label_6 != NULL)
     {
-        lv_label_set_text_fmt(guider_ui.screen_1_label_6, "%.1f°C", sh40_sensor->temperature);
+        lv_label_set_text_fmt(guider_ui.screen_1_label_6, "%.1f°C", sht40_sensor->temperature);
     }
     if (guider_ui.screen_1_label_7 != NULL)
     {
-        lv_label_set_text_fmt(guider_ui.screen_1_label_7, "%.1f%%", sh40_sensor->humidity);
+        lv_label_set_text_fmt(guider_ui.screen_1_label_7, "%.1f%%", sht40_sensor->humidity);
+    }
+    if(++count >= 60)
+    {
+        lv_chart_set_next_value(guider_ui.screen_1_chart_1, guider_ui.screen_1_chart_1_0, sht40_sensor->temperature);
+        count = 0;
     }
 }
 
@@ -49,7 +55,7 @@ static void ui_prama_refresh_cb(lv_timer_t *timer)
     LV_UNUSED(timer);
     if (osMutexAcquire(sh40MeasMutexHandle, 5) == osOK)
     {
-        ui_temperature_humidity_refresh(&sh40_sensor);
+        ui_temperature_humidity_refresh(&sht40_sensor);
         osMutexRelease(sh40MeasMutexHandle);
     }
 }
@@ -75,7 +81,7 @@ void lvglRefreshTask(void *argument)
                                   guider_ui.screen_1_del, &guider_ui.screen_del,
                                   setup_scr_screen_1, LV_SCR_LOAD_ANIM_FADE_ON,
                                   0, 0, true, true);
-                //printf("切换\n");
+            // printf("切换\n");
         }
         lv_timer_handler();
         osDelay(5);
