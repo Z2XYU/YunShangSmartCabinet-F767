@@ -88,7 +88,7 @@ void wifiSendTask(void *argument)
         if (osMessageQueueGet(wifiSendQueueHandle, &cmd, NULL, osWaitForever) == osOK)
         {
             //printf("发送命令\n");
-            wifi_send_message_handle(&cmd); // 处理并发送命令到 WiFi 模块
+            cmd_send_message_handle(&cmd); // 处理并发送命令到 WiFi 模块
         }
     }
 }

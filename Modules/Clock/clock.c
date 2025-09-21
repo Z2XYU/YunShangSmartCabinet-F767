@@ -41,9 +41,8 @@ void rtc_set_alarm_30min(void)
 void clock_get_time(void)
 {
     WifiCommand_t msg = {0};
-
-    strncpy(msg.type, "http", sizeof(msg.type) - 1);
-    strncpy(msg.cmd, "get_time", sizeof(msg.cmd) - 1);
+    msg.type = TYPE_HTTP;
+    msg.cmd.http_cmd = HTTP_CMD_GET_TIME;
 
     wifi_send_msg_to_queue(&msg, 0);
 }
@@ -62,5 +61,5 @@ void clock_set_time(Clock_t *clk)
     screen_1_digital_clock_1_min_value = clk->sTime.Minutes;
     screen_1_digital_clock_1_sec_value = clk->sTime.Seconds;
 
-    sprintf(screen_1_date_text, "%04d/%02d/%02d",clk->sDate.Year+2000,clk->sDate.Month,clk->sDate.Date);
+    sprintf(screen_1_date_text, "%04d/%02d/%02d", clk->sDate.Year + 2000, clk->sDate.Month, clk->sDate.Date);
 }

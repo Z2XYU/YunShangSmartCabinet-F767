@@ -128,40 +128,7 @@ void motorCommTask(void *argument)
         WifiMessage_t msg = {0};
         if (osMessageQueueGet(motorControlMsgQueueHandle, &msg, NULL, osWaitForever) == osOK)
         {
-            if (strcmp(msg.type, "mqtt") == 0 && strcmp(msg.cmd, "door_control") == 0)
-            {
-                if (strcmp(msg.data.control_cmd.action, "rent") == 0)
-                {
-                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
-                    {
-                        open_cmd(&msg);
-                    }
-                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
-                    {
-                        close_cmd(&msg);
-                    }
-                }
-                else if (strcmp(msg.data.control_cmd.action, "return") == 0)
-                {
-                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
-                    {
-                        
-                        if(osSemaphoreAcquire(recogDoneSemaphoreHandle,10000)==osOK)
-                        {
-                            open_cmd(&msg);
-                        }
-                        else
-                        {
-                            /*预留PCF8574 IO 扩展芯片*/
-                            //printf("检测失败\r\n");
-                        }
-                    }
-                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
-                    {
-                        close_cmd(&msg);
-                    }
-                }
-            }
+            
         }
     }
 }

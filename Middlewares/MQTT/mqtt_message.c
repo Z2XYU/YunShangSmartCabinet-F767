@@ -21,8 +21,9 @@ void mqtt_connect(void)
 {
     WifiCommand_t msg = {0};
 
-    strncpy(msg.type, "mqtt", sizeof(msg.type) - 1);
-    strncpy(msg.cmd, "mqtt_connect", sizeof(msg.cmd) - 1);
+    msg.type = TYPE_MQTT;
+    msg.cmd.mqtt_cmd = MQTT_CMD_CONNECT;
+
     strncpy(msg.data.mqtt_config.client_id, mqtt.client_id, sizeof(msg.data.mqtt_config.client_id) - 1);
     strncpy(msg.data.mqtt_config.username, mqtt.username, sizeof(msg.data.mqtt_config.username) - 1);
     strncpy(msg.data.mqtt_config.password, mqtt.password, sizeof(msg.data.mqtt_config.password) - 1);
@@ -37,8 +38,8 @@ void mqtt_subscribe_tpoic(const char *topic, const char *qos)
 {
     WifiCommand_t msg = {0};
 
-    strncpy(msg.type, "mqtt", sizeof(msg.type) - 1);
-    strncpy(msg.cmd, "subscribe", sizeof(msg.cmd) - 1);
+    msg.type = TYPE_MQTT;
+    msg.cmd.mqtt_cmd = MQTT_CMD_SUBSCRIBE;
     strncpy(msg.data.mqtt_config.topic, topic, sizeof(msg.data.mqtt_config.topic) - 1);
     strncpy(msg.data.mqtt_config.qos,qos,sizeof(msg.data.mqtt_config.qos)-1);
 
@@ -49,8 +50,8 @@ void mqtt_publish(const char *topic, char *payload)
 {
     WifiCommand_t msg = {0};
 
-    strncpy(msg.type, "mqtt", sizeof(msg.type) - 1);
-    strncpy(msg.cmd, "publish", sizeof(msg.cmd) - 1);
+    msg.type = TYPE_MQTT;
+    msg.cmd.mqtt_cmd = MQTT_CMD_PUBLISH;
 
     strncpy(msg.data.mqtt_config.topic, topic, sizeof(msg.data.mqtt_config.topic) - 1);
     strncpy(msg.data.mqtt_config.payload, payload, sizeof(msg.data.mqtt_config.payload) - 1);

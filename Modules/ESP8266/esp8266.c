@@ -24,8 +24,9 @@ void wifi_connect(void)
 {
     WifiCommand_t msg = {0};
 
-    strncpy(msg.type, "wifi", sizeof(msg.type) - 1);
-    strncpy(msg.cmd, "wifi_connect", sizeof(msg.cmd) - 1);
+    msg.type = TYPE_WIFI;
+    msg.cmd.wifi_cmd = WIFI_CMD_CONNECT;
+
     strncpy(msg.data.wifi_config.ssid, wifi.config.ssid, sizeof(msg.data.wifi_config.ssid) - 1);
     strncpy(msg.data.wifi_config.password, wifi.config.password, sizeof(msg.data.wifi_config.password) - 1);
 
@@ -34,9 +35,10 @@ void wifi_connect(void)
 
 void wifi_status_update(void)
 {
-    WifiCommand_t command = {0}; // 初始化为0
-    strncpy(command.type, "wifi", sizeof(command.type) - 1);
-    strncpy(command.cmd, "wifi_get_status", sizeof(command.cmd) - 1);
+    WifiCommand_t command = {0}; 
+
+    command.type = TYPE_WIFI;
+    command.cmd.wifi_cmd = WIFI_CMD_GET_STATUS;
     wifi_send_msg_to_queue(&command, 0);
 }
 
