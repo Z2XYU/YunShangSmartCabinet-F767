@@ -14,6 +14,7 @@ typedef enum
     TYPE_WIFI,
     TYPE_MQTT,
     TYPE_HTTP,
+    TYPE_TCP,
     TYPE_SYSTEM,
 } MsgType_t;
 
@@ -44,7 +45,14 @@ typedef enum
     HTTP_CMD_GET_TIME,
     HTTP_CMD_SET_TIME,
     HTTP_CMD_NUM
-}HttpCmd_t;
+} HttpCmd_t;
+
+typedef enum
+{
+    TCP_CMD_INVALID,
+    TCP_CMD_CONTROL,
+    TCP_CMD_NUM,
+} TcpCmd_t;
 
 typedef enum
 {
@@ -61,7 +69,9 @@ typedef struct
         WifiCmd_t wifi_cmd;
         MqttCmd_t mqtt_cmd;
         HttpCmd_t http_cmd;
+        TcpCmd_t tcp_cmd;
         SystemCmd_t sys_cmd;
+
     } cmd;
     union
     {
@@ -78,6 +88,7 @@ typedef struct
         WifiCmd_t wifi_cmd;
         MqttCmd_t mqtt_cmd;
         HttpCmd_t http_cmd;
+        TcpCmd_t tcp_cmd;
         SystemCmd_t sys_cmd;
     } cmd;
     union
@@ -88,7 +99,10 @@ typedef struct
     } data;
 } WifiMessage_t;
 
-typedef void (*cmd_handler)(WifiCommand_t *msg,cJSON *root);
+typedef void (*cmd_handler)(WifiCommand_t *msg, cJSON *root);
+
+void copy_json_int(cJSON *data, const char *key, int *dst);
+void copy_json_string(cJSON *data, const char *key, char *dst, size_t size);
 
 void cmd_send_message_handle(WifiCommand_t *msg);
 void wifi_recv_msg_handle(WifiMessage_t *msg);

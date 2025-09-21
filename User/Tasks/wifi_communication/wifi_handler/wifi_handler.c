@@ -6,18 +6,7 @@
 // --------------------------- JSON 辅助函数 ---------------------------
 
 // 安全拷贝 JSON 字符串到目标缓冲区
-static void copy_json_string(cJSON *data, const char *key, char *dst, size_t size)
-{
-    if (!data || !dst || size == 0)
-        return;
 
-    cJSON *item = cJSON_GetObjectItem(data, key);
-    if (cJSON_IsString(item) && item->valuestring)
-    {
-        // 使用 snprintf 避免截断溢出
-        snprintf(dst, size, "%s", item->valuestring);
-    }
-}
 
 // --------------------------- WIFI 状态处理 ---------------------------
 static void wifi_status_handle(WifiMessage_t *msg, cJSON *data)

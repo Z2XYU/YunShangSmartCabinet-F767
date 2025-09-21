@@ -14,6 +14,7 @@
 #include "wifi_handler/wifi_handler.h"
 #include "mqtt_handler/mqtt_handler.h"
 #include "http_handler/http_handler.h"
+#include "tcp_handler/tcp_handler.h"
 
 // 向消息队列发送消息
 osStatus_t wifi_send_msg_to_queue(const WifiCommand_t *cmd, uint32_t timeout_ms)
@@ -35,6 +36,31 @@ osStatus_t wifi_recv_msg_to_queue(const WifiMessage_t *msg, uint32_t timeout_ms)
     );
 }
 
+void copy_json_int(cJSON *data, const char *key, int *dst)
+{
+    if (!data || !dst)
+        return;
+
+    cJSON *item = cJSON_GetObjectItem(data, key);
+    if (cJSON_IsNumber(item))
+    {
+        *dst = item->valueint;
+    }
+}
+
+void copy_json_string(cJSON *data, const char *key, char *dst, size_t size)
+{
+    if (!data || !dst || size == 0)
+        return;
+
+    cJSON *item = cJSON_GetObjectItem(data, key);
+    if (cJSON_IsString(item) && item->valuestring)
+    {
+        // 使用 snprintf 避免截断溢出
+        snprintf(dst, size, "%s", item->valuestring);
+    }
+}
+
 static char uart_buf[512];
 
 static void msg_send(const char *json_str)
@@ -50,7 +76,7 @@ static void msg_send(const char *json_str)
     uart_buf[len] = '\n'; // 添加换行
     uart_buf[len + 1] = '\0';
 
-    printf("tx:%s",uart_buf);
+    printf("tx:%s", uart_buf);
 
     HAL_UART_Transmit_DMA(&huart2, (uint8_t *)uart_buf, (uint16_t)(len + 1));
 }
@@ -140,7 +166,7 @@ void wifi_recv_msg_parse(WifiMessage_t *msg, const char *json_str)
     {
     case TYPE_WIFI:
         msg->cmd.wifi_cmd = (WifiCmd_t)cJSON_GetNumberValue(cmd_item);
-        wifi_msg_parse(msg,json_str);
+        wifi_msg_parse(msg, json_str);
         break;
 
     case TYPE_MQTT:
@@ -149,8 +175,11 @@ void wifi_recv_msg_parse(WifiMessage_t *msg, const char *json_str)
 
     case TYPE_HTTP:
         msg->cmd.http_cmd = (HttpCmd_t)cJSON_GetNumberValue(cmd_item);
-        http_msg_parse(msg,json_str);
+        http_msg_parse(msg, json_str);
 
+    case TYPE_TCP:
+        msg->cmd.tcp_cmd = (TcpCmd_t)cJSON_GetNumberValue(cmd_item);
+        tcp_msg_parse(msg, json_str);
     default:
         break;
     }
@@ -174,6 +203,9 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
     case TYPE_HTTP:
         http_recv_msg(msg);
         break;
+
+    case TYPE_TCP:
+        tcp_recv_msg(msg);
     default:
         break;
     }
