@@ -1,4 +1,5 @@
-#include "tcp_handler.h"
+#include "websocket_handler.h"
+#include <stdio.h>
 
 static void motor_control_parse(WifiMessage_t *msg, cJSON *data)
 {
@@ -14,7 +15,7 @@ static void motor_control_parse(WifiMessage_t *msg, cJSON *data)
     copy_json_string(data, "option", msg->data.control_cmd.option, sizeof(msg->data.control_cmd.option));
 }
 
-void tcp_msg_parse(WifiMessage_t *msg, const char *json_str)
+void socket_msg_parse(WifiMessage_t *msg, const char *json_str)
 {
     if (!msg || !json_str)
         return;
@@ -30,9 +31,9 @@ void tcp_msg_parse(WifiMessage_t *msg, const char *json_str)
         return;
     }
 
-    switch (msg->cmd.tcp_cmd)
+    switch (msg->cmd.socket_cmd)
     {
-    case TCP_CMD_CONTROL:
+    case SOCKET_CMD_CONTROL:
         motor_control_parse(msg, data);
         break;
 
@@ -46,14 +47,14 @@ static void motor_control_cmd(WifiMessage_t *msg)
     osMessageQueuePut(motorControlMsgQueueHandle, msg, 0, 0);
 }
 
-void tcp_recv_msg(WifiMessage_t *msg)
+void socket_recv_msg(WifiMessage_t *msg)
 {
     if (!msg)
         return;
 
-    switch (msg->cmd.tcp_cmd)
+    switch (msg->cmd.socket_cmd)
     {
-    case TCP_CMD_CONTROL:
+    case SOCKET_CMD_CONTROL:
         motor_control_cmd(msg);
         break;
 

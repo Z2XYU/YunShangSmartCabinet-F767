@@ -15,6 +15,7 @@ typedef enum
     TYPE_MQTT,
     TYPE_HTTP,
     TYPE_TCP,
+    TYPE_SOCKET,
     TYPE_SYSTEM,
 } MsgType_t;
 
@@ -56,6 +57,13 @@ typedef enum
 
 typedef enum
 {
+    SOCKET_CMD_INVALID,
+    SOCKET_CMD_CONTROL,
+    SOCKET_CMD_NUM,
+} SocketCmd_t;
+
+typedef enum
+{
     SYS_CMD_REBOOT,
     SYS_CMD_UPDATE,
     SYS_CMD_NUM
@@ -70,8 +78,8 @@ typedef struct
         MqttCmd_t mqtt_cmd;
         HttpCmd_t http_cmd;
         TcpCmd_t tcp_cmd;
+        SocketCmd_t socket_cmd;
         SystemCmd_t sys_cmd;
-
     } cmd;
     union
     {
@@ -89,6 +97,7 @@ typedef struct
         MqttCmd_t mqtt_cmd;
         HttpCmd_t http_cmd;
         TcpCmd_t tcp_cmd;
+        SocketCmd_t socket_cmd;
         SystemCmd_t sys_cmd;
     } cmd;
     union

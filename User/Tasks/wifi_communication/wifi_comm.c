@@ -15,6 +15,7 @@
 #include "mqtt_handler/mqtt_handler.h"
 #include "http_handler/http_handler.h"
 #include "tcp_handler/tcp_handler.h"
+#include "websocket_handler/websocket_handler.h"
 
 // 向消息队列发送消息
 osStatus_t wifi_send_msg_to_queue(const WifiCommand_t *cmd, uint32_t timeout_ms)
@@ -180,6 +181,10 @@ void wifi_recv_msg_parse(WifiMessage_t *msg, const char *json_str)
     case TYPE_TCP:
         msg->cmd.tcp_cmd = (TcpCmd_t)cJSON_GetNumberValue(cmd_item);
         tcp_msg_parse(msg, json_str);
+
+    case TYPE_SOCKET:
+        msg->cmd.socket_cmd = (SocketCmd_t)cJSON_GetNumberValue(cmd_item);
+        socket_msg_parse(msg, json_str);
     default:
         break;
     }
@@ -206,6 +211,9 @@ void wifi_recv_msg_handle(WifiMessage_t *msg)
 
     case TYPE_TCP:
         tcp_recv_msg(msg);
+
+    case TYPE_SOCKET:
+        socket_recv_msg(msg);
     default:
         break;
     }

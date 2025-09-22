@@ -107,23 +107,29 @@ void motorCalibrationTask(void *argument)
 
 static void open_cmd(WifiMessage_t *msg)
 {
-    doors[msg->data.control_cmd.cabinet_location].state = DOOR_OPENING;
-    door_open(&motors[msg->data.control_cmd.cabinet_location - 1]);
+    /*存在越界bug  规范区间*/
+    if (msg->data.control_cmd.cabinet_location - 1 < MOTOR_NUM)
+    {
+        doors[msg->data.control_cmd.cabinet_location].state = DOOR_OPENING;
+        door_open(&motors[msg->data.control_cmd.cabinet_location - 1]);
+    }
 
-    printf("door: %d opening\n",msg->data.control_cmd.cabinet_location);
+    printf("door: %d opening\n", msg->data.control_cmd.cabinet_location);
 }
 
 static void close_cmd(WifiMessage_t *msg)
 {
-    doors[msg->data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
-    door_close(&motors[msg->data.control_cmd.cabinet_location - 1]);
-    printf("door: %d closing\n",msg->data.control_cmd.cabinet_location);
+    if (msg->data.control_cmd.cabinet_location - 1 < MOTOR_NUM)
+    {
+        doors[msg->data.control_cmd.cabinet_location].state = DOOR_CLOSEING;
+        door_close(&motors[msg->data.control_cmd.cabinet_location - 1]);
+        /*开启等离子净化*/
+        plasma_on_all();
+        rtc_set_alarm_30min();
+    }
 
-    /*开启等离子净化*/
-    plasma_on_all();
-    rtc_set_alarm_30min();
+    printf("door: %d closing\n", msg->data.control_cmd.cabinet_location);
 }
-
 
 void motorCommTask(void *argument)
 {
@@ -133,36 +139,36 @@ void motorCommTask(void *argument)
         if (osMessageQueueGet(motorControlMsgQueueHandle, &msg, NULL, osWaitForever) == osOK)
         {
             if (strcmp(msg.data.control_cmd.action, "rent") == 0)
+            {
+                if (strcmp(msg.data.control_cmd.option, "open") == 0)
                 {
-                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
-                    {
-                        open_cmd(&msg);
-                    }
-                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
-                    {
-                        close_cmd(&msg);
-                    }
+                    open_cmd(&msg);
                 }
-                else if (strcmp(msg.data.control_cmd.action, "return") == 0)
+                else if (strcmp(msg.data.control_cmd.option, "close") == 0)
                 {
-                    if (strcmp(msg.data.control_cmd.option, "open") == 0)
-                    {
-                        
-                        // if(osSemaphoreAcquire(recogDoneSemaphoreHandle,10000)==osOK)
-                        // {
-                            open_cmd(&msg);
-                        // }
-                        // else
-                        // {
-                        //     /*预留PCF8574 IO 扩展芯片*/
-                        //     //printf("检测失败\r\n");
-                        // }
-                    }
-                    else if (strcmp(msg.data.control_cmd.option, "close") == 0)
-                    {
-                        close_cmd(&msg);
-                    }
+                    close_cmd(&msg);
                 }
+            }
+            else if (strcmp(msg.data.control_cmd.action, "return") == 0)
+            {
+                if (strcmp(msg.data.control_cmd.option, "open") == 0)
+                {
+
+                    // if(osSemaphoreAcquire(recogDoneSemaphoreHandle,10000)==osOK)
+                    // {
+                    open_cmd(&msg);
+                    // }
+                    // else
+                    // {
+                    //     /*预留PCF8574 IO 扩展芯片*/
+                    //     //printf("检测失败\r\n");
+                    // }
+                }
+                else if (strcmp(msg.data.control_cmd.option, "close") == 0)
+                {
+                    close_cmd(&msg);
+                }
+            }
         }
     }
 }
